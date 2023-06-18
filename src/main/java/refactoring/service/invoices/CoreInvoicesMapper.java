@@ -13,11 +13,11 @@ public class CoreInvoicesMapper {
 
     private static InvoiceData mapCoreInvoice(FinanceInvoice i) {
         return InvoiceData.builder()
-                .assetId(i.getHotelId())
-                .invoiceType(i.getType())
+                .assetId(i.getHotelId())  // note: attribute name conversion
+                .invoiceType(i.getType()) // // note: attribute name conversion
                 .invoiceDate(i.getInvoiceDate())
-                .externalId(i.getInvoiceId())
-                .commissionAmount(i.getCommission())
+                .externalId(i.getInvoiceId().toString())  // note: type  and attr name conversion
+                .commissionAmount(i.getCommission()) // note: attribute name conversion
                 .build();
     }
 }

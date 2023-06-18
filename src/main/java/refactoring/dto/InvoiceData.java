@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Builder
 public class InvoiceData {
     final private Long assetId;
-    final private Long externalId;
+    final private String externalId;
     final private String invoiceType;
     final private BigDecimal commissionAmount;
     final private LocalDate invoiceDate;
