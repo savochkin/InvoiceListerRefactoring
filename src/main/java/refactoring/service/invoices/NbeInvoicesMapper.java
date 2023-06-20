@@ -17,6 +17,8 @@ public class NbeInvoicesMapper {
                 .invoiceDate(i.getInvoiceDate())
                 .externalId(i.getExternalId())
                 .commissionAmount(i.getSettlementInvoiceAmount())
+                .rpsNumber(i.getExtraInfo_rpsNumber()) // note: rpsNumber is provided by NBE
+                .prefeituraUrl(i.getExtraInfo_prefeituraUrl()) // note: prefeituraUrl is provided by NBE
                 .build();
     }
 }

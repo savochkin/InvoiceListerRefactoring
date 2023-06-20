@@ -9,11 +9,13 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class SimpleInvoiceProjectionDTO {
-    final private String externalId;
-    final private BigDecimal settlementInvoiceAmount;
-    final private String invoiceType;
-    final private LocalDate invoiceDate;
+    private final String externalId;
+    private final BigDecimal settlementInvoiceAmount;
+    private final String invoiceType;
+    private final LocalDate invoiceDate;
     // for now I do not want to bother with business entities
-    final private Long assetId;
-    final private String paidState;
+    private final Long assetId;
+    private final String paidState;
+    private final Long extraInfo_rpsNumber;
+    private final String extraInfo_prefeituraUrl;
 }
