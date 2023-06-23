@@ -1,18 +1,17 @@
-package refactoring.service.invoices;
+package refactoring.api;
 
 import refactoring.billing.models.SimpleInvoiceProjectionDTO;
-import refactoring.domain.fin.Debtor;
-import refactoring.domain.fin.FinanceInvoice;
-import refactoring.domain.fin.FinanceInvoiceBrazil;
-import refactoring.dto.InvoiceData;
+import refactoring.debtor.Debtor;
+import refactoring.invoice.BrazilInvoiceData;
+import refactoring.invoice.corebilling.CoreInvoice;
+import refactoring.invoice.corebilling.CoreInvoiceBrazil;
+import refactoring.invoice.InvoiceData;
 import org.junit.jupiter.api.Test;
-import refactoring.repository.fin.DebtorRepository;
-import refactoring.repository.fin.FinanceInvoiceBrazilRepository;
-import refactoring.service.billingengine.BillingEngineClient;
-import refactoring.service.invoices.brazil.BrazilInvoiceService;
-import refactoring.service.repo.fin.DebtorService;
-import refactoring.service.repo.fin.FinanceInvoiceBrazilService;
-import refactoring.service.repo.fin.FinanceInvoiceService;
+import refactoring.debtor.DebtorRepository;
+import refactoring.invoice.corebilling.CoreInvoiceBrazilRepository;
+import refactoring.billingengine.BillingEngineClient;
+import refactoring.debtor.DebtorFactory;
+import refactoring.invoice.corebilling.CoreInvoiceRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,7 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class InvoiceListerServiceTest {
+class InvoiceListerControllerTest {
     final private static long NON_BRAZIL_DEBTOR_ID = 111L;
     final private static long BRAZIL_DEBTOR_ID = 222L;
 /*
@@ -30,6 +29,9 @@ class InvoiceListerServiceTest {
    externalId, invoiceType, commissionAmount, status, invoiceDate
    + for invoices from brazil partner return extra info including:
    rpsNumber, prefeituraUrl
+   + display id should be calculated differently for brazil and non brazil, as follows  brazil? rpsNumber : externalId
+
+   not implemented so far:
    - for all invoice types commission amount is positive, for credit note - negative
    - for all invoices from non-europe partners return isAdyenPayment = false, otherwise return true
    - partners can fetch invoices only for the assets they currently own
@@ -38,34 +40,24 @@ class InvoiceListerServiceTest {
  */
 
     @Test
-    void getInvoiceBasicInformation() {
-        DebtorService debtorService = getDebtorService();
-        BrazilInvoiceService brazilInvoiceService = getBrazilInvoiceService();
-        FinanceInvoiceService financeInvoiceService = getFinanceInvoiceService();
-        BillingEngineClient billingEngineClient = getBillingEngineClient();
-
-        InvoiceListerService sut = new InvoiceListerService(debtorService, financeInvoiceService, billingEngineClient, brazilInvoiceService);
+    void getInvoicesFromNonBrazil() {
+        InvoiceListerController sut = new InvoiceListerController(getDebtorService());
         List<InvoiceData> invoices = sut.getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
         assertNotNull(invoices);
-        assertEquals(getTestInvoices().size(), invoices.size());
+        assertEquals(getExpectedNonBrazilInvoices().size(), invoices.size());
         for(int i=0; i<invoices.size(); i++) {
-            assertEquals(getTestInvoices().get(i), invoices.get(i));
+            assertEquals(getExpectedNonBrazilInvoices().get(i), invoices.get(i));
         }
     }
 
     @Test
     void getInvoicesFromBrazil() {
-        DebtorService debtorService = getDebtorService();
-        BrazilInvoiceService brazilInvoiceService = getBrazilInvoiceService();
-        FinanceInvoiceService financeInvoiceService = getFinanceInvoiceService();
-        BillingEngineClient billingEngineClient = getBillingEngineClient();
-
-        InvoiceListerService sut = new InvoiceListerService(debtorService, financeInvoiceService, billingEngineClient, brazilInvoiceService);
+        InvoiceListerController sut = new InvoiceListerController(getDebtorService());
         List<InvoiceData> invoices = sut.getInvoicesList(BRAZIL_DEBTOR_ID, false);
         assertNotNull(invoices);
-        assertEquals(getTestBrazilInvoices().size(), invoices.size());
-        for(InvoiceData invoice: getTestBrazilInvoices()) {
-            assertTrue(invoices.stream().anyMatch(i -> i.equals(invoice)));
+        assertEquals(getExpectedBrazilInvoices().size(), invoices.size());
+        for(BrazilInvoiceData expected: getExpectedBrazilInvoices()) {
+            assertTrue(invoices.stream().anyMatch(i -> ((BrazilInvoiceData)i).equals(expected)));
         }
     }
 
@@ -76,31 +68,28 @@ class InvoiceListerServiceTest {
         return billingEngineClient;
     }
 
-    private FinanceInvoiceService getFinanceInvoiceService() {
-        FinanceInvoiceService financeInvoiceService = mock(FinanceInvoiceService.class);
-        when(financeInvoiceService.getInvoicesForHotel(NON_BRAZIL_DEBTOR_ID)).thenReturn(getTestFinanceInvoices());
-        when(financeInvoiceService.getInvoicesForHotel(BRAZIL_DEBTOR_ID)).thenReturn(getTestFinanceBrazilInvoices());
-        return financeInvoiceService;
+    private CoreInvoiceRepository getCoreInvoiceRepository() {
+        CoreInvoiceRepository coreInvoiceRepository = mock(CoreInvoiceRepository.class);
+        when(coreInvoiceRepository.getInvoicesForHotel(NON_BRAZIL_DEBTOR_ID)).thenReturn(getTestFinanceInvoices());
+        when(coreInvoiceRepository.getInvoicesForHotel(BRAZIL_DEBTOR_ID)).thenReturn(getTestFinanceBrazilInvoices());
+        return coreInvoiceRepository;
     }
 
-    private DebtorService getDebtorService() {
+    private DebtorFactory getDebtorService() {
         DebtorRepository debtorRepository = mock(DebtorRepository.class);
         when(debtorRepository.getDebtorById(NON_BRAZIL_DEBTOR_ID)).thenReturn(getTestDebtor());
         when(debtorRepository.getDebtorById(BRAZIL_DEBTOR_ID)).thenReturn(getBrazilDebtor());
-        return new DebtorService(debtorRepository);
+        return new DebtorFactory(debtorRepository, getCoreInvoiceRepository(), getBillingEngineClient(), getCoreInvoiceBrazilRepository());
     }
 
-    private BrazilInvoiceService getBrazilInvoiceService() {
-        FinanceInvoiceBrazilRepository financeInvoiceBrazilRepository = mock(FinanceInvoiceBrazilRepository.class);
-        when(financeInvoiceBrazilRepository.getByInvoiceIds()).thenReturn(getFinanceInvoiceBrazilInvoices());
-
-        FinanceInvoiceBrazilService financeInvoiceBrazilService = new FinanceInvoiceBrazilService(financeInvoiceBrazilRepository);
-        BrazilInvoiceService brazilInvoiceService = new BrazilInvoiceService(financeInvoiceBrazilService);
-        return brazilInvoiceService;
+    private CoreInvoiceBrazilRepository getCoreInvoiceBrazilRepository() {
+        CoreInvoiceBrazilRepository coreInvoiceBrazilRepository = mock(CoreInvoiceBrazilRepository.class);
+        when(coreInvoiceBrazilRepository.getByInvoiceIds()).thenReturn(getCoreInvoiceBrazilInvoices());
+        return coreInvoiceBrazilRepository;
     }
 
-    private List<FinanceInvoiceBrazil> getFinanceInvoiceBrazilInvoices() {
-        FinanceInvoiceBrazil brazil1 = FinanceInvoiceBrazil.builder()
+    private List<CoreInvoiceBrazil> getCoreInvoiceBrazilInvoices() {
+        CoreInvoiceBrazil brazil1 = CoreInvoiceBrazil.builder()
                 .invoiceId(20220203L)
                 .rpsNumber(8888L)
                 .prefeituraUrl("http://www.prefeitura.com/20220203")
@@ -128,8 +117,8 @@ class InvoiceListerServiceTest {
         return List.of(invoice1, invoice2);
     }
 
-    private List<FinanceInvoice> getTestFinanceInvoices() {
-        FinanceInvoice financeInvoice1 =  FinanceInvoice.builder()
+    private List<CoreInvoice> getTestFinanceInvoices() {
+        CoreInvoice coreInvoice1 =  CoreInvoice.builder()
                 .invoiceId(20230103L)
                 .invoiceDate(LocalDate.of(2023, 1, 3))
                 .hotelId(111L)
@@ -137,7 +126,7 @@ class InvoiceListerServiceTest {
                 .paidState("paid")
                 .type("reservation_statement")
                 .build();
-        FinanceInvoice financeInvoice2 =  FinanceInvoice.builder()
+        CoreInvoice coreInvoice2 =  CoreInvoice.builder()
                 .invoiceId(20230203L)
                 .invoiceDate(LocalDate.of(2023, 2, 3))
                 .hotelId(111L)
@@ -145,7 +134,7 @@ class InvoiceListerServiceTest {
                 .paidState("unpaid")
                 .type("reservation_statement")
                 .build();
-        return List.of(financeInvoice1, financeInvoice2);
+        return List.of(coreInvoice1, coreInvoice2);
     }
 
     private Debtor getTestDebtor() {
@@ -162,7 +151,7 @@ class InvoiceListerServiceTest {
                 .build();
     }
 
-    private List<InvoiceData> getTestInvoices() {
+    private List<InvoiceData> getExpectedNonBrazilInvoices() {
         InvoiceData invoiceData1 = InvoiceData.builder()
                 .assetId(111L)
                 .externalId("20230103")
@@ -170,6 +159,7 @@ class InvoiceListerServiceTest {
                 .commissionAmount(BigDecimal.valueOf(231.03))
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 1, 3))
+                .displayId("20230103")
                 .build();
         InvoiceData invoiceData2 = InvoiceData.builder()
                 .assetId(111L)
@@ -178,6 +168,7 @@ class InvoiceListerServiceTest {
                 .commissionAmount(BigDecimal.valueOf(232.03))
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 2, 3))
+                .displayId("20230203")
                 .build();
         InvoiceData invoiceData3 = InvoiceData.builder()
                 .assetId(111L)
@@ -186,6 +177,7 @@ class InvoiceListerServiceTest {
                 .commissionAmount(BigDecimal.valueOf(233.03))
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 3, 3))
+                .displayId("20230303")
                 .build();
         InvoiceData invoiceData4 = InvoiceData.builder()
                 .assetId(111L)
@@ -194,12 +186,13 @@ class InvoiceListerServiceTest {
                 .commissionAmount(BigDecimal.valueOf(234.03))
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 4, 3))
+                .displayId("20230403")
                 .build();
         return List.of(invoiceData1, invoiceData2, invoiceData3, invoiceData4);
     }
 
-    private List<InvoiceData> getTestBrazilInvoices() {
-        InvoiceData invoiceData1 = InvoiceData.builder()
+    private List<BrazilInvoiceData> getExpectedBrazilInvoices() {
+        BrazilInvoiceData invoiceData1 = BrazilInvoiceData.builder()
                 .assetId(BRAZIL_DEBTOR_ID)
                 .externalId("20220103")
                 .invoiceType("invoice")
@@ -208,8 +201,9 @@ class InvoiceListerServiceTest {
                 .invoiceDate(LocalDate.of(2022, 1, 3))
                 .rpsNumber(9999L)
                 .prefeituraUrl("http://www.prefeitura.com/20220103")
+                .displayId(String.valueOf(9999L))
                 .build();
-        InvoiceData invoiceData2 = InvoiceData.builder()
+        BrazilInvoiceData invoiceData2 = BrazilInvoiceData.builder()
                 .assetId(BRAZIL_DEBTOR_ID)
                 .externalId("20220203")
                 .invoiceType("invoice")
@@ -218,6 +212,7 @@ class InvoiceListerServiceTest {
                 .invoiceDate(LocalDate.of(2022, 2, 3))
                 .rpsNumber(8888L)
                 .prefeituraUrl("http://www.prefeitura.com/20220203")
+                .displayId(String.valueOf(8888L))
                 .build();
         return List.of(invoiceData1, invoiceData2);
     }
@@ -236,8 +231,8 @@ class InvoiceListerServiceTest {
         return List.of(invoice1);
     }
 
-    private List<FinanceInvoice> getTestFinanceBrazilInvoices() {
-        FinanceInvoice financeInvoice1 =  FinanceInvoice.builder()
+    private List<CoreInvoice> getTestFinanceBrazilInvoices() {
+        CoreInvoice coreInvoice1 =  CoreInvoice.builder()
                 .invoiceId(20220203L)
                 .invoiceDate(LocalDate.of(2022, 2, 3))
                 .hotelId(BRAZIL_DEBTOR_ID)
@@ -245,6 +240,6 @@ class InvoiceListerServiceTest {
                 .paidState("paid")
                 .type("reservation_statement")
                 .build();
-        return List.of(financeInvoice1);
+        return List.of(coreInvoice1);
     }
 }

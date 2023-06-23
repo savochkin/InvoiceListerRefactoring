@@ -1,6 +1,6 @@
-package refactoring.repository.fin;
+package refactoring.debtor;
 
-import refactoring.domain.fin.Debtor;
+import refactoring.debtor.Debtor;
 
 public interface DebtorRepository {
     Debtor getDebtorById(Long debtorId);
