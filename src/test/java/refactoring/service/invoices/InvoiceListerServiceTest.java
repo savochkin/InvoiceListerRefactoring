@@ -26,14 +26,14 @@ class InvoiceListerServiceTest {
     final private static long BRAZIL_DEBTOR_ID = 222L;
 /*
    functional requirements:
-   - for all invoices return basic information including:
+   + for all invoices return basic information including:
    externalId, invoiceType, commissionAmount, status, invoiceDate
-   - for invoices from brazil partner return extra info including:
+   + for invoices from brazil partner return extra info including:
    rpsNumber, prefeituraUrl
    - for all invoice types commission amount is positive, for credit note - negative
    - for all invoices from non-europe partners return isAdyenPayment = false, otherwise return true
    - partners can fetch invoices only for the assets they currently own
-   - B.com staff can fetch invoics for the current owner but also can fetch all invoices for an asset disregarding the ownership
+   - B.com staff can fetch invoices for the current owner but also can fetch all invoices for an asset disregarding the ownership
    - invoices may come from core billing and nbe
  */
 

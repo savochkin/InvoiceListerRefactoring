@@ -20,6 +20,14 @@ public class InvoiceListerService {
     private BillingEngineClient billingEngineClient;
     private BrazilInvoiceService brazilInvoiceService;
 
+    /*
+     TODO: migrate to a rich model, move fetching invoices to Debtor entity
+     Debtor entity should encapsulate the complexity of the fetching invoices via Core and NBE
+     this method should look like
+     {
+        return DebtorRepository.findById(assetId).getInvoices();
+     }
+     */
     public List<InvoiceData> getInvoicesList(Long assetId, Boolean includeCOO) {
         Debtor debtor = debtorService.getDebtorById(assetId);
         List<InvoiceData> invoices = new ArrayList<>();
@@ -29,11 +37,20 @@ public class InvoiceListerService {
     }
 
     private List<InvoiceData> getInvoicesFromCore(Debtor debtor, Boolean includeCOO) {
-        // filter invoices in core billing using debtor's start date
         List<FinanceInvoice> financeInvoices = financeInvoiceService.getInvoicesForHotel(debtor.getDebtorId());
         List<InvoiceData> invoices = CoreInvoicesMapper.mapCoreInvoices(financeInvoices);
 
+        /*
+        TODO: get rid of such if statements by using polymorphism
+        suggestion is to create a BrazilDebtor as a subclass of Debtor
+        which will by default fill all the Brazil fields
+         */
         if (debtor.isContractedByBrazil()) {
+            /*
+            TODO: make FinanceInvoices immutable and avoid using setXXXFields like methods
+            suggestion is to have a BrazilInvoiceData as a subclass of InvoiceData
+            with additional fields
+            */
             brazilInvoiceService.setInvoiceBrazilFields(invoices);
         }
         return invoices;
