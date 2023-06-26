@@ -1,4 +1,4 @@
-package refactoring.billingengine;
+package refactoring.invoicelister.billingengine;
 
 import refactoring.billing.models.SimpleInvoiceProjectionDTO;
 

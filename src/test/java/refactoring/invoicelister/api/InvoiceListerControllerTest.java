@@ -1,15 +1,15 @@
-package refactoring.api;
+package refactoring.invoicelister.api;
 
 import refactoring.billing.models.SimpleInvoiceProjectionDTO;
-import refactoring.debtor.Debtor;
-import refactoring.invoice.corebilling.CoreInvoice;
-import refactoring.invoice.corebilling.CoreInvoiceBrazil;
+import refactoring.invoicelister.domain.Debtor;
+import refactoring.invoicelister.corebilling.CoreInvoice;
+import refactoring.invoicelister.corebilling.CoreInvoiceBrazil;
 import org.junit.jupiter.api.Test;
-import refactoring.debtor.DebtorRepository;
-import refactoring.invoice.corebilling.CoreInvoiceBrazilRepository;
-import refactoring.billingengine.BillingEngineClient;
-import refactoring.debtor.DebtorFactory;
-import refactoring.invoice.corebilling.CoreInvoiceRepository;
+import refactoring.invoicelister.domain.DebtorRepository;
+import refactoring.invoicelister.corebilling.CoreInvoiceBrazilRepository;
+import refactoring.invoicelister.billingengine.BillingEngineClient;
+import refactoring.invoicelister.domain.DebtorFactory;
+import refactoring.invoicelister.corebilling.CoreInvoiceRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

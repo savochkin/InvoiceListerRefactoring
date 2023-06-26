@@ -1,11 +1,11 @@
-package refactoring.debtor;
+package refactoring.invoicelister.domain.brazil;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
-import refactoring.invoice.BrazilInvoiceData;
-import refactoring.invoice.InvoiceData;
-import refactoring.invoice.corebilling.CoreInvoiceBrazilRepository;
+import refactoring.invoicelister.corebilling.CoreInvoiceBrazilRepository;
+import refactoring.invoicelister.domain.Debtor;
+import refactoring.invoicelister.domain.InvoiceData;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package refactoring.invoice.corebilling;
+package refactoring.invoicelister.corebilling;
 
 import java.util.List;
 

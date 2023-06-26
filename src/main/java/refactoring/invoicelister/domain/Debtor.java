@@ -1,11 +1,10 @@
-package refactoring.debtor;
+package refactoring.invoicelister.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
-import refactoring.billingengine.BillingEngineClient;
-import refactoring.invoice.InvoiceData;
-import refactoring.invoice.corebilling.CoreInvoiceRepository;
+import refactoring.invoicelister.billingengine.BillingEngineClient;
+import refactoring.invoicelister.corebilling.CoreInvoiceRepository;
 
 import java.util.List;
 import java.util.stream.Stream;

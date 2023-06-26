@@ -1,8 +1,8 @@
-package refactoring.api;
+package refactoring.invoicelister.api;
 
 import lombok.AllArgsConstructor;
-import refactoring.debtor.Debtor;
-import refactoring.debtor.DebtorFactory;
+import refactoring.invoicelister.domain.Debtor;
+import refactoring.invoicelister.domain.DebtorFactory;
 
 @AllArgsConstructor
 public class InvoiceListerController {

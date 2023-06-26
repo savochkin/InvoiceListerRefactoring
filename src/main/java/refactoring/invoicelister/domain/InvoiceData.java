@@ -1,9 +1,9 @@
-package refactoring.invoice;
+package refactoring.invoicelister.domain;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 import refactoring.billing.models.SimpleInvoiceProjectionDTO;
-import refactoring.invoice.corebilling.CoreInvoice;
+import refactoring.invoicelister.corebilling.CoreInvoice;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

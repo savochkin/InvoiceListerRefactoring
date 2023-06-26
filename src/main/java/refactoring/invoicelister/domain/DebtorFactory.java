@@ -1,27 +1,23 @@
-package refactoring.debtor;
+package refactoring.invoicelister.domain;
 
 import lombok.AllArgsConstructor;
-import refactoring.billingengine.BillingEngineClient;
-import refactoring.invoice.corebilling.CoreInvoiceBrazilRepository;
-import refactoring.invoice.corebilling.CoreInvoiceRepository;
+import refactoring.invoicelister.billingengine.BillingEngineClient;
+import refactoring.invoicelister.corebilling.CoreInvoiceBrazilRepository;
+import refactoring.invoicelister.corebilling.CoreInvoiceRepository;
+import refactoring.invoicelister.domain.brazil.BrazilDebtor;
 
 /*
  * NOTE: Removed all the services and used repositories directly instead
  * if we are following the DDD - suggestion is to use Entities, VO, Repositories as first class citizens
  * services should be used to implement some important domain logic only if the logic does not fit
  * into any entity/VO/Repository
- *
- * Reorganized the packages so that they were more loosely coupled and cohesive,
- * e.g. all debtor related domain classes should go to "debtor" package
- * no controller/dto/services/repo like packages as they make all the packages tightly coupled
- *
  */
 @AllArgsConstructor
 public class DebtorFactory {
     private final DebtorRepository debtorRepository;
-    private CoreInvoiceRepository coreInvoiceRepository;
-    private BillingEngineClient billingEngineClient;
-    private CoreInvoiceBrazilRepository coreInvoiceBrazilRepository;
+    private final CoreInvoiceRepository coreInvoiceRepository;
+    private final BillingEngineClient billingEngineClient;
+    private final CoreInvoiceBrazilRepository coreInvoiceBrazilRepository;
 
     /*
         if now is left in only one place - the factory method

@@ -1,10 +1,11 @@
-package refactoring.invoice;
+package refactoring.invoicelister.domain.brazil;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import refactoring.billing.models.SimpleInvoiceProjectionDTO;
-import refactoring.invoice.corebilling.CoreInvoiceBrazil;
+import refactoring.invoicelister.corebilling.CoreInvoiceBrazil;
+import refactoring.invoicelister.domain.InvoiceData;
 
 @EqualsAndHashCode(callSuper=true)
 @Data
@@ -20,11 +21,11 @@ public class BrazilInvoiceData extends InvoiceData {
     // this makes the mapping logic in one place
     public static InvoiceData fromInvoiceData(InvoiceData invoice, CoreInvoiceBrazil brazil) {
         return builder()
-                .assetId(invoice.getAssetId())  // note: attribute name conversion
-                .invoiceType(invoice.getInvoiceType()) // // note: attribute name conversion
+                .assetId(invoice.getAssetId())
+                .invoiceType(invoice.getInvoiceType())
                 .invoiceDate(invoice.getInvoiceDate())
-                .externalId(invoice.getExternalId().toString())  // note: type  and attr name conversion
-                .commissionAmount(invoice.getCommissionAmount()) // note: attribute name conversion
+                .externalId(invoice.getExternalId())
+                .commissionAmount(invoice.getCommissionAmount())
                 .rpsNumber(brazil.getRpsNumber())
                 .prefeituraUrl(brazil.getPrefeituraUrl())
                 .displayId(String.valueOf(brazil.getRpsNumber())) // note: display id for brazil is coming from rps number

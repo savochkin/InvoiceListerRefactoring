@@ -1,4 +1,4 @@
-package refactoring.api;
+package refactoring.invoicelister.api;
 
 import lombok.Builder;
 import lombok.Getter;

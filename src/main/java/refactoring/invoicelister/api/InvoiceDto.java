@@ -1,9 +1,9 @@
-package refactoring.api;
+package refactoring.invoicelister.api;
 
 import lombok.Builder;
 import lombok.Data;
-import refactoring.invoice.BrazilInvoiceData;
-import refactoring.invoice.InvoiceData;
+import refactoring.invoicelister.domain.brazil.BrazilInvoiceData;
+import refactoring.invoicelister.domain.InvoiceData;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
