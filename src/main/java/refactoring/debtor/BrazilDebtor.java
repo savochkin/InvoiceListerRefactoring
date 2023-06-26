@@ -35,7 +35,7 @@ public class BrazilDebtor extends Debtor {
     private List<InvoiceData> getBrazilianInvoices(List<InvoiceData> invoices) {
         Map<String, InvoiceData> invoiceById = invoices.stream().collect(Collectors.toMap(InvoiceData::getExternalId, Function.identity()));
         return getCoreInvoiceBrazilRepository().getByInvoiceIds().stream()
-                .map(b -> (InvoiceData) BrazilInvoiceData.fromInvoiceData(invoiceById.get(String.valueOf(b.getInvoiceId())), b))
+                .map(b -> BrazilInvoiceData.fromInvoiceData(invoiceById.get(String.valueOf(b.getInvoiceId())), b))
                 .toList();
     }
 
