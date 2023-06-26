@@ -2,10 +2,8 @@ package refactoring.api;
 
 import refactoring.billing.models.SimpleInvoiceProjectionDTO;
 import refactoring.debtor.Debtor;
-import refactoring.invoice.BrazilInvoiceData;
 import refactoring.invoice.corebilling.CoreInvoice;
 import refactoring.invoice.corebilling.CoreInvoiceBrazil;
-import refactoring.invoice.InvoiceData;
 import org.junit.jupiter.api.Test;
 import refactoring.debtor.DebtorRepository;
 import refactoring.invoice.corebilling.CoreInvoiceBrazilRepository;

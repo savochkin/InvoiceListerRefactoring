@@ -6,20 +6,15 @@ import refactoring.invoice.corebilling.CoreInvoiceBrazilRepository;
 import refactoring.invoice.corebilling.CoreInvoiceRepository;
 
 /*
- * Real class is here: https://sourcegraph.booking.com/gitlab.booking.com/faas/finance-invoices/fintooling-services/-/blob/src/main/java/com/booking/faas/fintooling/service/repo/fin/DebtorService.java?L15:14&popover=pinned
- * TODO: remove all such services and use repositories directly instead
- * not sure what value they are adding...but they increase the code base and its complexity
+ * NOTE: Removed all the services and used repositories directly instead
  * if we are following the DDD - suggestion is to use Entities, VO, Repositories as first class citizens
  * services should be used to implement some important domain logic only if the logic does not fit
  * into any entity/VO/Repository
  *
- * NOTE: Removed all the services and used repositories directly instead
+ * Reorganized the packages so that they were more loosely coupled and cohesive,
+ * e.g. all debtor related domain classes should go to "debtor" package
+ * no controller/dto/services/repo like packages as they make all the packages tightly coupled
  *
- * TODO: reorg package structure, services should go into the package by domain
- * what a strange name of the package!
- * all debtor related domain classes should go to "domain.debtor" package
- *
- * NOTE: Moved all debtor related domain classes to the "debtor" package
  */
 @AllArgsConstructor
 public class DebtorFactory {
@@ -49,7 +44,6 @@ public class DebtorFactory {
                     .contractedBy(debtor.getContractedBy())
                     .billingEngineClient(billingEngineClient)
                     .coreInvoiceRepository(coreInvoiceRepository)
-                    .coreInvoiceBrazilRepository(coreInvoiceBrazilRepository)
                     .build();
         }
     }

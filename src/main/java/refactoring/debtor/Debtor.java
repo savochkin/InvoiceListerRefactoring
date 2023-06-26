@@ -5,12 +5,17 @@ import lombok.Data;
 import lombok.experimental.SuperBuilder;
 import refactoring.billingengine.BillingEngineClient;
 import refactoring.invoice.InvoiceData;
-import refactoring.invoice.corebilling.CoreInvoiceBrazilRepository;
 import refactoring.invoice.corebilling.CoreInvoiceRepository;
 
 import java.util.List;
 import java.util.stream.Stream;
 
+/*
+    NOTE: Debtor domain model. It encapsulates not only data for debtor but also the logic, e.g. getting invoices.
+    This debtor has no specifics for Brazil as it was moved to the BrazilDebtor subclass.
+    Polymorphism makes it much easier to grasp the general logic behind the Debtor behaviour without going into very details.
+    If a reader wants to understand the Brazil specifics he can look BrazilDebtor.
+ */
 @Data
 @SuperBuilder
 @AllArgsConstructor
@@ -19,7 +24,6 @@ public class Debtor {
     private final String contractedBy;
     private final CoreInvoiceRepository coreInvoiceRepository;
     private final BillingEngineClient billingEngineClient;
-    private final CoreInvoiceBrazilRepository coreInvoiceBrazilRepository;
 
     // if we can pay online via Adyen - this is a property of the debtor, not invoice
     // for the sake of example assuming that Adyen is allowed everywhere but Brazil
