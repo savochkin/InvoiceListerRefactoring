@@ -15,11 +15,17 @@ import java.util.stream.Stream;
 @SuperBuilder
 @AllArgsConstructor
 public class Debtor {
-    final private Long debtorId;
-    final private String contractedBy;
-    final private CoreInvoiceRepository coreInvoiceRepository;
-    final private BillingEngineClient billingEngineClient;
-    final private CoreInvoiceBrazilRepository coreInvoiceBrazilRepository;
+    private final Long debtorId;
+    private final String contractedBy;
+    private final CoreInvoiceRepository coreInvoiceRepository;
+    private final BillingEngineClient billingEngineClient;
+    private final CoreInvoiceBrazilRepository coreInvoiceBrazilRepository;
+
+    // if we can pay online via Adyen - this is a property of the debtor, not invoice
+    // for the sake of example assuming that Adyen is allowed everywhere but Brazil
+    public boolean isAdyenEnabled() {
+        return !isContractedByBrazil();
+    }
 
     public boolean isContractedByBrazil() {return "CONTRACTED_BY_BRAZIL".equals(contractedBy);}
 

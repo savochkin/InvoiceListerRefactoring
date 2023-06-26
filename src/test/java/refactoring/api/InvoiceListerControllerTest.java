@@ -42,22 +42,22 @@ class InvoiceListerControllerTest {
     @Test
     void getInvoicesFromNonBrazil() {
         InvoiceListerController sut = new InvoiceListerController(getDebtorService());
-        List<InvoiceData> invoices = sut.getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
-        assertNotNull(invoices);
-        assertEquals(getExpectedNonBrazilInvoices().size(), invoices.size());
-        for(int i=0; i<invoices.size(); i++) {
-            assertEquals(getExpectedNonBrazilInvoices().get(i), invoices.get(i));
+        GetInvoicesListResponse response = sut.getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
+        assertNotNull(response.getInvoices());
+        assertEquals(getExpectedNonBrazilInvoices().size(), response.getInvoices().size());
+        for(int i=0; i<response.getInvoices().size(); i++) {
+            assertEquals(getExpectedNonBrazilInvoices().get(i), response.getInvoices().get(i));
         }
     }
 
     @Test
     void getInvoicesFromBrazil() {
         InvoiceListerController sut = new InvoiceListerController(getDebtorService());
-        List<InvoiceData> invoices = sut.getInvoicesList(BRAZIL_DEBTOR_ID, false);
-        assertNotNull(invoices);
-        assertEquals(getExpectedBrazilInvoices().size(), invoices.size());
-        for(BrazilInvoiceData expected: getExpectedBrazilInvoices()) {
-            assertTrue(invoices.stream().anyMatch(i -> ((BrazilInvoiceData)i).equals(expected)));
+        GetInvoicesListResponse response = sut.getInvoicesList(BRAZIL_DEBTOR_ID, false);
+        assertNotNull(response.getInvoices());
+        assertEquals(getExpectedBrazilInvoices().size(), response.getInvoices().size());
+        for(InvoiceDto expected: getExpectedBrazilInvoices()) {
+            assertTrue(response.getInvoices().stream().anyMatch(i -> i.equals(expected)));
         }
     }
 
@@ -151,8 +151,8 @@ class InvoiceListerControllerTest {
                 .build();
     }
 
-    private List<InvoiceData> getExpectedNonBrazilInvoices() {
-        InvoiceData invoiceData1 = InvoiceData.builder()
+    private List<InvoiceDto> getExpectedNonBrazilInvoices() {
+        InvoiceDto invoiceData1 = InvoiceDto.builder()
                 .assetId(111L)
                 .externalId("20230103")
                 .invoiceType("invoice")
@@ -161,7 +161,7 @@ class InvoiceListerControllerTest {
                 .invoiceDate(LocalDate.of(2023, 1, 3))
                 .displayId("20230103")
                 .build();
-        InvoiceData invoiceData2 = InvoiceData.builder()
+        InvoiceDto invoiceData2 = InvoiceDto.builder()
                 .assetId(111L)
                 .externalId("20230203")
                 .invoiceType("invoice")
@@ -170,7 +170,7 @@ class InvoiceListerControllerTest {
                 .invoiceDate(LocalDate.of(2023, 2, 3))
                 .displayId("20230203")
                 .build();
-        InvoiceData invoiceData3 = InvoiceData.builder()
+        InvoiceDto invoiceData3 = InvoiceDto.builder()
                 .assetId(111L)
                 .externalId("20230303")
                 .invoiceType("invoice")
@@ -179,7 +179,7 @@ class InvoiceListerControllerTest {
                 .invoiceDate(LocalDate.of(2023, 3, 3))
                 .displayId("20230303")
                 .build();
-        InvoiceData invoiceData4 = InvoiceData.builder()
+        InvoiceDto invoiceData4 = InvoiceDto.builder()
                 .assetId(111L)
                 .externalId("20230403")
                 .invoiceType("invoice")
@@ -191,8 +191,8 @@ class InvoiceListerControllerTest {
         return List.of(invoiceData1, invoiceData2, invoiceData3, invoiceData4);
     }
 
-    private List<BrazilInvoiceData> getExpectedBrazilInvoices() {
-        BrazilInvoiceData invoiceData1 = BrazilInvoiceData.builder()
+    private List<InvoiceDto> getExpectedBrazilInvoices() {
+        InvoiceDto invoiceData1 = InvoiceDto.builder()
                 .assetId(BRAZIL_DEBTOR_ID)
                 .externalId("20220103")
                 .invoiceType("invoice")
@@ -203,7 +203,7 @@ class InvoiceListerControllerTest {
                 .prefeituraUrl("http://www.prefeitura.com/20220103")
                 .displayId(String.valueOf(9999L))
                 .build();
-        BrazilInvoiceData invoiceData2 = BrazilInvoiceData.builder()
+        InvoiceDto invoiceData2 = InvoiceDto.builder()
                 .assetId(BRAZIL_DEBTOR_ID)
                 .externalId("20220203")
                 .invoiceType("invoice")
