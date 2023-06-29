@@ -15,4 +15,5 @@ public class FinanceInvoice {
     final private BigDecimal commission;
     final private String paidState;
     final private String type;
+    final private int company;
 }

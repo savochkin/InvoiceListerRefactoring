@@ -1,6 +1,7 @@
 package refactoring.service.invoices;
 
 import refactoring.billing.models.SimpleInvoiceProjectionDTO;
+import refactoring.controller.ListInvoicesController;
 import refactoring.domain.fin.Debtor;
 import refactoring.domain.fin.FinanceInvoice;
 import refactoring.domain.fin.FinanceInvoiceBrazil;
@@ -30,6 +31,7 @@ class InvoiceListerServiceTest {
    externalId, invoiceType, commissionAmount, status, invoiceDate
    + for invoices from brazil partner return extra info including:
    rpsNumber, prefeituraUrl
+   + return indicator if invoice is allowed to be paid by Adyen (we allow to be paid by Adyen in all countries but Brazil)
    - for all invoice types commission amount is positive, for credit note - negative
    - for all invoices from non-europe partners return isAdyenPayment = false, otherwise return true
    - partners can fetch invoices only for the assets they currently own
@@ -38,14 +40,8 @@ class InvoiceListerServiceTest {
  */
 
     @Test
-    void getInvoiceBasicInformation() {
-        DebtorService debtorService = getDebtorService();
-        BrazilInvoiceService brazilInvoiceService = getBrazilInvoiceService();
-        FinanceInvoiceService financeInvoiceService = getFinanceInvoiceService();
-        BillingEngineClient billingEngineClient = getBillingEngineClient();
-
-        InvoiceListerService sut = new InvoiceListerService(debtorService, financeInvoiceService, billingEngineClient, brazilInvoiceService);
-        List<InvoiceData> invoices = sut.getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
+    void getInvoicesFromNonBrazil() {
+        List<InvoiceData> invoices = getListInvoicesController().getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
         assertNotNull(invoices);
         assertEquals(getTestInvoices().size(), invoices.size());
         for(int i=0; i<invoices.size(); i++) {
@@ -55,18 +51,37 @@ class InvoiceListerServiceTest {
 
     @Test
     void getInvoicesFromBrazil() {
-        DebtorService debtorService = getDebtorService();
-        BrazilInvoiceService brazilInvoiceService = getBrazilInvoiceService();
-        FinanceInvoiceService financeInvoiceService = getFinanceInvoiceService();
-        BillingEngineClient billingEngineClient = getBillingEngineClient();
-
-        InvoiceListerService sut = new InvoiceListerService(debtorService, financeInvoiceService, billingEngineClient, brazilInvoiceService);
-        List<InvoiceData> invoices = sut.getInvoicesList(BRAZIL_DEBTOR_ID, false);
+        List<InvoiceData> invoices = getListInvoicesController().getInvoicesList(BRAZIL_DEBTOR_ID, false);
         assertNotNull(invoices);
         assertEquals(getTestBrazilInvoices().size(), invoices.size());
         for(InvoiceData invoice: getTestBrazilInvoices()) {
             assertTrue(invoices.stream().anyMatch(i -> i.equals(invoice)));
         }
+    }
+
+    @Test
+    void adyenAllowedInAllCountriesButBrazil() {
+        List<InvoiceData> invoices = getListInvoicesController().getInvoicesList(BRAZIL_DEBTOR_ID, false);
+        assertNotNull(invoices);
+        for(InvoiceData invoice: invoices) {
+            assertFalse(invoice.isAdyenAllowed());
+        }
+
+        List<InvoiceData> invoices2 = getListInvoicesController().getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
+        assertNotNull(invoices2);
+        for(InvoiceData invoice: invoices2) {
+            assertTrue(invoice.isAdyenAllowed());
+        }
+    }
+
+
+    private ListInvoicesController getListInvoicesController() {
+        DebtorService debtorService = getDebtorService();
+        BrazilInvoiceService brazilInvoiceService = getBrazilInvoiceService();
+        FinanceInvoiceService financeInvoiceService = getFinanceInvoiceService();
+        BillingEngineClient billingEngineClient = getBillingEngineClient();
+        InvoiceListerService invoiceListerService = new InvoiceListerService(debtorService, financeInvoiceService, billingEngineClient, brazilInvoiceService);
+        return new ListInvoicesController(invoiceListerService);
     }
 
     private BillingEngineClient getBillingEngineClient() {
@@ -163,6 +178,35 @@ class InvoiceListerServiceTest {
     }
 
     private List<InvoiceData> getTestInvoices() {
+        InvoiceData invoiceData1 = new InvoiceData();
+        invoiceData1.setAssetId(111L);
+        invoiceData1.setExternalId("20230103");
+        invoiceData1.setInvoiceType("invoice");
+        invoiceData1.setCommissionAmount(BigDecimal.valueOf(231.03));
+        invoiceData1.setInvoiceType("reservation_statement");
+        invoiceData1.setInvoiceDate(LocalDate.of(2023, 1, 3));
+        InvoiceData invoiceData2 = new InvoiceData();
+        invoiceData2.setAssetId(111L);
+        invoiceData2.setExternalId("20230203");
+        invoiceData2.setInvoiceType("invoice");
+        invoiceData2.setCommissionAmount(BigDecimal.valueOf(232.03));
+        invoiceData2.setInvoiceType("reservation_statement");
+        invoiceData2.setInvoiceDate(LocalDate.of(2023, 2, 3));
+        InvoiceData invoiceData3 = new InvoiceData();
+        invoiceData3.setAssetId(111L);
+        invoiceData3.setExternalId("20230303");
+        invoiceData3.setInvoiceType("invoice");
+        invoiceData3.setCommissionAmount(BigDecimal.valueOf(233.03));
+        invoiceData3.setInvoiceType("reservation_statement");
+        invoiceData3.setInvoiceDate(LocalDate.of(2023, 3, 3));
+        InvoiceData invoiceData4 = new InvoiceData();
+        invoiceData4.setAssetId(111L);
+        invoiceData4.setExternalId("20230403");
+        invoiceData4.setInvoiceType("invoice");
+        invoiceData4.setCommissionAmount(BigDecimal.valueOf(234.03));
+        invoiceData4.setInvoiceType("reservation_statement");
+        invoiceData4.setInvoiceDate(LocalDate.of(2023, 4, 3));
+        /*
         InvoiceData invoiceData1 = InvoiceData.builder()
                 .assetId(111L)
                 .externalId("20230103")
@@ -195,10 +239,30 @@ class InvoiceListerServiceTest {
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 4, 3))
                 .build();
+         */
         return List.of(invoiceData1, invoiceData2, invoiceData3, invoiceData4);
     }
 
     private List<InvoiceData> getTestBrazilInvoices() {
+        InvoiceData invoiceData1 = new InvoiceData();
+        invoiceData1.setAssetId(BRAZIL_DEBTOR_ID);
+        invoiceData1.setExternalId("20220103");
+        invoiceData1.setInvoiceType("invoice");
+        invoiceData1.setCommissionAmount(BigDecimal.valueOf(221.03));
+        invoiceData1.setInvoiceType("reservation_statement");
+        invoiceData1.setInvoiceDate(LocalDate.of(2022, 1, 3));
+        invoiceData1.setRpsNumber(9999L);
+        invoiceData1.setPrefeituraUrl("http://www.prefeitura.com/20220103");
+        InvoiceData invoiceData2 = new InvoiceData();
+        invoiceData2.setAssetId(BRAZIL_DEBTOR_ID);
+        invoiceData2.setExternalId("20220203");
+        invoiceData2.setInvoiceType("invoice");
+        invoiceData2.setCommissionAmount(BigDecimal.valueOf(222.03));
+        invoiceData2.setInvoiceType("reservation_statement");
+        invoiceData2.setInvoiceDate(LocalDate.of(2022, 2, 3));
+        invoiceData2.setRpsNumber(8888L);
+        invoiceData2.setPrefeituraUrl("http://www.prefeitura.com/20220203");
+        /*
         InvoiceData invoiceData1 = InvoiceData.builder()
                 .assetId(BRAZIL_DEBTOR_ID)
                 .externalId("20220103")
@@ -218,7 +282,7 @@ class InvoiceListerServiceTest {
                 .invoiceDate(LocalDate.of(2022, 2, 3))
                 .rpsNumber(8888L)
                 .prefeituraUrl("http://www.prefeitura.com/20220203")
-                .build();
+                .build();*/
         return List.of(invoiceData1, invoiceData2);
     }
 
