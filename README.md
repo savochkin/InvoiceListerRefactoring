@@ -37,12 +37,14 @@ Suggestion: we need to extract the "if debtor is Brazil" check into a function a
 of retrieving invoices. It is better to move the Brazil logic into subclasses so that it would be easier to grasp the main scenario, but an interested reader could always
 dive into subclasses to understand Brazil implementation.
 Suggestion: Encapsulate Brazil logic into subclasses and use polymorphism.
+8. We should clearly distinguish domain objects and Dtos. Right now InvoiceData is used in both senses.
 
 So the suggested refactoring includs (see MR):
-1. InvoiceData made immutable.
+1. InvoiceData made immutable. Also removed setXXXFields like code in favour for enriching pipelines and polymorhism. Removed mapper classes and used builders instead.
 2. Names of the classes made more consistent. Also Core billing related classes renamed from "Finance*" to "Core*" for better understanding.
 3. Created package for the feature "invoicelister" with subpackages "api" - for UI interface, "corebilling/billingengine" - for core/nbe related classes, "domain" - for domain objects.
 4. Proxy services like FinanceInvoiceBrazilService, DebtorService are removed. Using corresponding repositories instead directly.
 5. getInvoicesList is now 4 lines long and moved to the Debtor class
 6. If statement are removed by using polymorphism
 7. Brazil logic is encapsulated in Brazil related subclasses. The main invoice retrieving logic is now crystal clear.
+8. Implemented a special Dto for getInvoiceLister operation and distinguished it from the domain objects.
