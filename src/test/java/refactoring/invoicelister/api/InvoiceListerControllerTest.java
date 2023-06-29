@@ -28,10 +28,10 @@ class InvoiceListerControllerTest {
    + for invoices from brazil partner return extra info including:
    rpsNumber, prefeituraUrl
    + display id should be calculated differently for brazil and non brazil, as follows  brazil? rpsNumber : externalId
+   + or all invoices from non-europe partners return isAdyenAllowed = false, otherwise return true
 
    not implemented so far:
    - for all invoice types commission amount is positive, for credit note - negative
-   - for all invoices from non-europe partners return isAdyenPayment = false, otherwise return true
    - partners can fetch invoices only for the assets they currently own
    - B.com staff can fetch invoices for the current owner but also can fetch all invoices for an asset disregarding the ownership
    - invoices may come from core billing and nbe
@@ -39,8 +39,7 @@ class InvoiceListerControllerTest {
 
     @Test
     void getInvoicesFromNonBrazil() {
-        InvoiceListerController sut = new InvoiceListerController(getDebtorService());
-        GetInvoicesListResponse response = sut.getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
+        GetInvoicesListResponse response = getInvoiceListerController().getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
         assertNotNull(response.getInvoices());
         assertEquals(getExpectedNonBrazilInvoices().size(), response.getInvoices().size());
         for(int i=0; i<response.getInvoices().size(); i++) {
@@ -50,8 +49,7 @@ class InvoiceListerControllerTest {
 
     @Test
     void getInvoicesFromBrazil() {
-        InvoiceListerController sut = new InvoiceListerController(getDebtorService());
-        GetInvoicesListResponse response = sut.getInvoicesList(BRAZIL_DEBTOR_ID, false);
+        GetInvoicesListResponse response = getInvoiceListerController().getInvoicesList(BRAZIL_DEBTOR_ID, false);
         assertNotNull(response.getInvoices());
         assertEquals(getExpectedBrazilInvoices().size(), response.getInvoices().size());
         for(InvoiceDto expected: getExpectedBrazilInvoices()) {
@@ -59,6 +57,20 @@ class InvoiceListerControllerTest {
         }
     }
 
+    @Test
+    void adyenAllowedInAllCountriesButBrazil() {
+        GetInvoicesListResponse response = getInvoiceListerController().getInvoicesList(BRAZIL_DEBTOR_ID, false);
+        assertFalse(response.isAdyenEnabled());
+
+        GetInvoicesListResponse response2 =  getInvoiceListerController().getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
+        assertTrue(response2.isAdyenEnabled());
+    }
+
+
+    private InvoiceListerController getInvoiceListerController() {
+        InvoiceListerController sut = new InvoiceListerController(getDebtorService());
+        return sut;
+    }
     private BillingEngineClient getBillingEngineClient() {
         BillingEngineClient billingEngineClient = mock(BillingEngineClient.class);
         when(billingEngineClient.getInvoices(NON_BRAZIL_DEBTOR_ID)).thenReturn(getNbeInvoices());
