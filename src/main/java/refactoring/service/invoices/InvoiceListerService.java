@@ -59,7 +59,7 @@ public class InvoiceListerService {
         suggestion: we need to extract this check into a function and, since it operates only on attributes
         of the debtor - we can move it to the debtor class
         */
-        if (FinConstants.CONTRACTED_BY_BRAZIL.equals(debtor.getContractedBy())) {
+        if (debtor.isContractedByBrazil()) {
             /*
             Code smell: This is a "Mutable Data" bad smell
             (see https://learning.oreilly.com/library/view/refactoring-improving-the/9780134757681/ch03.xhtml#:-:text=Mutable%20Data).
@@ -78,7 +78,7 @@ public class InvoiceListerService {
 
         for(InvoiceData invoice1 : invoices2) {
             // Code smell: "Repeated Switches"
-            int company = FinConstants.CONTRACTED_BY_BRAZIL.equals(debtor.getContractedBy())
+            int company = debtor.isContractedByBrazil()
                     ? FinConstants.COMPANY_BOOKING_LTDA : FinConstants.COMPANY_BOOKING_BV;
             invoice1.setCompany(company);
         }
@@ -86,7 +86,7 @@ public class InvoiceListerService {
 
         for(InvoiceData invoice: invoices) {
             // Code smell: "Repeated Switches"
-            if (FinConstants.CONTRACTED_BY_BRAZIL.equals(debtor.getContractedBy())) {
+            if (debtor.isContractedByBrazil()) {
                 // Requirement: We allow paying online through Adyen in all countries but Brazil
                 // Code smell: if the business logic relies only on Debtor attributes - this property should be moved to the Debtor class along with
                 // the logic. If it also takes into account invoices attributes - then it should be encapsulated in the invoices class. Exposing the
