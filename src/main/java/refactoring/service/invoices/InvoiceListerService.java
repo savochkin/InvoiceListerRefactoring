@@ -2,23 +2,27 @@ package refactoring.service.invoices;
 
 import lombok.AllArgsConstructor;
 import refactoring.FinConstants;
-import refactoring.billing.models.SimpleInvoiceProjectionDTO;
 import refactoring.domain.fin.Debtor;
+import refactoring.domain.fin.FinanceInvoiceBrazil;
 import refactoring.dto.InvoiceData;
 import refactoring.service.billingengine.BillingEngineClient;
-import refactoring.service.invoices.brazil.BrazilInvoiceService;
 import refactoring.service.repo.fin.DebtorService;
+import refactoring.service.repo.fin.FinanceInvoiceBrazilService;
 import refactoring.service.repo.fin.FinanceInvoiceService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class InvoiceListerService {
     private DebtorService debtorService;
     private FinanceInvoiceService financeInvoiceService;
     private BillingEngineClient billingEngineClient;
-    private BrazilInvoiceService brazilInvoiceService;
+    private FinanceInvoiceBrazilService financeInvoiceBrazilService;
+
 
     /*
      Code smell: Long function with many parameters which contains a lot of if statements which makes it fragile and difficult to understand.
@@ -107,10 +111,19 @@ public class InvoiceListerService {
             e.g. in this case we may intially have basic InvoiceData immutable object, but for Brazil we would need to
             create a new object BrazilInvoiceData.
              */
-            brazilInvoiceService.setInvoiceBrazilFields(invoices1);
+            return getBrazilInvoices(invoices1);
+        } else {
+            return invoices1;
         }
-        return invoices1;
     }
 
+    public List<InvoiceData> getBrazilInvoices(List<InvoiceData> invoices) {
+        Map<Long, FinanceInvoiceBrazil> brazilInvoices = getBrazilInvoices();
+        return invoices.stream().map(i -> InvoiceData.fromFinanceInvoice(i, brazilInvoices.get(i.getExternalId()))).toList();
+    }
 
+    private Map<Long, FinanceInvoiceBrazil> getBrazilInvoices() {
+        List<FinanceInvoiceBrazil> brazilInvoices = financeInvoiceBrazilService.getByInvoiceIds();
+        return brazilInvoices.stream().collect(Collectors.toMap(FinanceInvoiceBrazil::getInvoiceId, Function.identity()));
+    }
 }

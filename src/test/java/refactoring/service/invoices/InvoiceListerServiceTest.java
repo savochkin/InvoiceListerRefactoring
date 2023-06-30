@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import refactoring.repository.fin.DebtorRepository;
 import refactoring.repository.fin.FinanceInvoiceBrazilRepository;
 import refactoring.service.billingengine.BillingEngineClient;
-import refactoring.service.invoices.brazil.BrazilInvoiceService;
 import refactoring.service.repo.fin.DebtorService;
 import refactoring.service.repo.fin.FinanceInvoiceBrazilService;
 import refactoring.service.repo.fin.FinanceInvoiceService;
@@ -77,10 +76,10 @@ class InvoiceListerServiceTest {
 
     private ListInvoicesController getListInvoicesController() {
         DebtorService debtorService = getDebtorService();
-        BrazilInvoiceService brazilInvoiceService = getBrazilInvoiceService();
+        FinanceInvoiceBrazilService financeInvoiceBrazilService = getFinanceInvoiceBrazilService();
         FinanceInvoiceService financeInvoiceService = getFinanceInvoiceService();
         BillingEngineClient billingEngineClient = getBillingEngineClient();
-        InvoiceListerService invoiceListerService = new InvoiceListerService(debtorService, financeInvoiceService, billingEngineClient, brazilInvoiceService);
+        InvoiceListerService invoiceListerService = new InvoiceListerService(debtorService, financeInvoiceService, billingEngineClient, financeInvoiceBrazilService);
         return new ListInvoicesController(invoiceListerService);
     }
 
@@ -105,13 +104,10 @@ class InvoiceListerServiceTest {
         return new DebtorService(debtorRepository);
     }
 
-    private BrazilInvoiceService getBrazilInvoiceService() {
+    private FinanceInvoiceBrazilService getFinanceInvoiceBrazilService() {
         FinanceInvoiceBrazilRepository financeInvoiceBrazilRepository = mock(FinanceInvoiceBrazilRepository.class);
         when(financeInvoiceBrazilRepository.getByInvoiceIds()).thenReturn(getFinanceInvoiceBrazilInvoices());
-
-        FinanceInvoiceBrazilService financeInvoiceBrazilService = new FinanceInvoiceBrazilService(financeInvoiceBrazilRepository);
-        BrazilInvoiceService brazilInvoiceService = new BrazilInvoiceService(financeInvoiceBrazilService);
-        return brazilInvoiceService;
+        return new FinanceInvoiceBrazilService(financeInvoiceBrazilRepository);
     }
 
     private List<FinanceInvoiceBrazil> getFinanceInvoiceBrazilInvoices() {
