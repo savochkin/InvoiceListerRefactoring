@@ -6,11 +6,7 @@ import refactoring.dto.InvoiceData;
 import java.util.List;
 
 public class NbeInvoicesMapper {
-    public static List<InvoiceData> mapNbeInvoices(List<SimpleInvoiceProjectionDTO> invoices) {
-        return invoices.stream().map(i -> mapNbeInvoice(i)).toList();
-    }
-
-    private static InvoiceData mapNbeInvoice(SimpleInvoiceProjectionDTO i) {
+    public static InvoiceData mapNbeInvoice(SimpleInvoiceProjectionDTO i) {
         /*
         Code smell: Mutable Data. If we make InvoiceData mutable - it makes our code fragile as
         it is very difficult to control invariants or business rules over invoice data.

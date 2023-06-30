@@ -42,6 +42,43 @@ public class InvoiceListerService {
     public List<InvoiceData> getInvoicesList(Long assetId, Boolean includeCOO) {
         Debtor debtor = debtorService.getDebtorById(assetId);
         List<InvoiceData> invoices = new ArrayList<>();
+        List<InvoiceData> invoices1 = getCoreInvoices(debtor);
+        invoices.addAll(invoices1);
+        List<InvoiceData> invoices2 = getNbeInvoices(debtor);
+        invoices.addAll(invoices2);
+
+        for(InvoiceData invoice: invoices) {
+            // Code smell: "Repeated Switches"
+            if (debtor.isContractedByBrazil()) {
+                // Requirement: We allow paying online through Adyen in all countries but Brazil
+                // Code smell: if the business logic relies only on Debtor attributes - this property should be moved to the Debtor class along with
+                // the logic. If it also takes into account invoices attributes - then it should be encapsulated in the invoices class. Exposing the
+                // business logic in the service places produces risks of bugs... we need to remember that we need to obtain invoices
+                // only through this operation. What if somebody fetches invoices directly? What if somebody mutates invoices for some reason?
+                // Code smell: Mutable data (https://learning.oreilly.com/library/view/refactoring-improving-the/9780134757681/ch03.xhtml#:-:text=Mutable%20Data)
+                // suggestion: Make InvoiceData immutable and encapsulate "AdyenAllowed" business logic to the Debtor class
+                invoice.setAdyenAllowed(false);
+            } else {
+                invoice.setAdyenAllowed(true);
+            }
+        }
+        return invoices;
+    }
+
+    private List<InvoiceData> getNbeInvoices(Debtor debtor) {
+        List<InvoiceData> invoices2 = billingEngineClient.getInvoices(debtor.getDebtorId())
+                .stream().map(NbeInvoicesMapper::mapNbeInvoice).toList();
+
+        int company = debtor.isContractedByBrazil()
+                ? FinConstants.COMPANY_BOOKING_LTDA : FinConstants.COMPANY_BOOKING_BV;
+        for(InvoiceData invoice1 : invoices2) {
+            // Code smell: "Repeated Switches"
+            invoice1.setCompany(company);
+        }
+        return invoices2;
+    }
+
+    private List<InvoiceData> getCoreInvoices(Debtor debtor) {
         List<InvoiceData> invoices1 = financeInvoiceService.getInvoicesForHotel(debtor.getDebtorId())
                 .stream().map(CoreInvoicesMapper::mapCoreInvoice).toList();
 
@@ -72,34 +109,7 @@ public class InvoiceListerService {
              */
             brazilInvoiceService.setInvoiceBrazilFields(invoices1);
         }
-        invoices.addAll(invoices1);
-        List<SimpleInvoiceProjectionDTO> nbeInvoices = billingEngineClient.getInvoices(debtor.getDebtorId());
-        List<InvoiceData> invoices2 = NbeInvoicesMapper.mapNbeInvoices(nbeInvoices);
-
-        for(InvoiceData invoice1 : invoices2) {
-            // Code smell: "Repeated Switches"
-            int company = debtor.isContractedByBrazil()
-                    ? FinConstants.COMPANY_BOOKING_LTDA : FinConstants.COMPANY_BOOKING_BV;
-            invoice1.setCompany(company);
-        }
-        invoices.addAll(invoices2);
-
-        for(InvoiceData invoice: invoices) {
-            // Code smell: "Repeated Switches"
-            if (debtor.isContractedByBrazil()) {
-                // Requirement: We allow paying online through Adyen in all countries but Brazil
-                // Code smell: if the business logic relies only on Debtor attributes - this property should be moved to the Debtor class along with
-                // the logic. If it also takes into account invoices attributes - then it should be encapsulated in the invoices class. Exposing the
-                // business logic in the service places produces risks of bugs... we need to remember that we need to obtain invoices
-                // only through this operation. What if somebody fetches invoices directly? What if somebody mutates invoices for some reason?
-                // Code smell: Mutable data (https://learning.oreilly.com/library/view/refactoring-improving-the/9780134757681/ch03.xhtml#:-:text=Mutable%20Data)
-                // suggestion: Make InvoiceData immutable and encapsulate "AdyenAllowed" business logic to the Debtor class
-                invoice.setAdyenAllowed(false);
-            } else {
-                invoice.setAdyenAllowed(true);
-            }
-        }
-        return invoices;
+        return invoices1;
     }
 
 
