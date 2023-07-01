@@ -23,7 +23,7 @@ public class Debtor {
         List<InvoiceData> invoices = new ArrayList<>();
         invoices.addAll(getCoreInvoices());
         invoices.addAll(getNbeInvoices());
-        return invoices.stream().map(i->InvoiceData.fromInvoiceDataAndAdyenAllowed(i, this.isAdyenAllowed())).toList();
+        return invoices;
     }
 
     protected List<InvoiceData> getNbeInvoices() {
