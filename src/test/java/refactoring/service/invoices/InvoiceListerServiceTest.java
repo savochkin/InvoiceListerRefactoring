@@ -1,6 +1,6 @@
 package refactoring.service.invoices;
 
-import refactoring.FinConstants;
+import refactoring.invoicelister.domain.FinConstants;
 import refactoring.billingengine.SimpleInvoiceProjectionDTO;
 import refactoring.invoicelister.ui.GetInvoiceListResponse;
 import refactoring.invoicelister.ui.InvoiceDto;
@@ -8,7 +8,6 @@ import refactoring.invoicelister.ui.ListInvoicesController;
 import refactoring.invoicelister.domain.Debtor;
 import refactoring.corebilling.CoreInvoice;
 import refactoring.corebilling.CoreInvoiceBrazil;
-import refactoring.invoicelister.domain.InvoiceData;
 import org.junit.jupiter.api.Test;
 import refactoring.invoicelister.domain.DebtorRepository;
 import refactoring.corebilling.CoreInvoiceBrazilRepository;
