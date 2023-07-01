@@ -6,8 +6,6 @@ import refactoring.invoicelister.domain.InvoiceData;
 
 import java.util.List;
 
-// Code smell: The controller is called ListInvoiceController, while service is named InvoiceListerService. Naming is very confusing...
-// Why names are so similar? why they are not still fully consistent?
 @AllArgsConstructor
 public class ListInvoicesController {
     DebtorFactory debtorFactory;

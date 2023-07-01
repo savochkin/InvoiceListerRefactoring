@@ -1,8 +1,6 @@
 package refactoring.corebilling;
 
 import lombok.AllArgsConstructor;
-import refactoring.corebilling.FinanceInvoiceBrazil;
-import refactoring.corebilling.FinanceInvoiceBrazilRepository;
 
 import java.util.List;
 
@@ -16,9 +14,9 @@ import java.util.List;
 * Suggestion: remove all such services and use repositories directly instead
 */
 @AllArgsConstructor
-public class FinanceInvoiceBrazilService {
-    FinanceInvoiceBrazilRepository financeInvoiceBrazilRepository;
-    public List<FinanceInvoiceBrazil> getByInvoiceIds() {
-        return financeInvoiceBrazilRepository.getByInvoiceIds();
+public class CoreInvoiceBrazilService {
+    CoreInvoiceBrazilRepository coreInvoiceBrazilRepository;
+    public List<CoreInvoiceBrazil> getByInvoiceIds() {
+        return coreInvoiceBrazilRepository.getByInvoiceIds();
     }
 }

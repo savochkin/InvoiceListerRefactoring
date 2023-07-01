@@ -2,8 +2,8 @@ package refactoring.invoicelister.domain;
 
 import lombok.AllArgsConstructor;
 import refactoring.billingengine.BillingEngineClient;
-import refactoring.corebilling.FinanceInvoiceBrazilService;
-import refactoring.corebilling.FinanceInvoiceService;
+import refactoring.corebilling.CoreInvoiceBrazilService;
+import refactoring.corebilling.CoreInvoiceService;
 
 /*
  * Real class is here: https://sourcegraph.booking.com/gitlab.booking.com/faas/finance-invoices/fintooling-services/-/blob/src/main/java/com/booking/faas/fintooling/service/repo/fin/DebtorService.java?L15:14&popover=pinned
@@ -21,8 +21,8 @@ import refactoring.corebilling.FinanceInvoiceService;
 @AllArgsConstructor
 public class DebtorFactory {
     private final DebtorRepository debtorRepository;
-    private FinanceInvoiceBrazilService financeInvoiceBrazilService;
-    private FinanceInvoiceService financeInvoiceService;
+    private CoreInvoiceBrazilService coreInvoiceBrazilService;
+    private CoreInvoiceService coreInvoiceService;
     private BillingEngineClient billingEngineClient;
 
     public Debtor getById(Long debtorId) {
@@ -32,15 +32,15 @@ public class DebtorFactory {
                     .contractedBy(debtor.getContractedBy())
                     .debtorId(debtor.getDebtorId())
                     .billingEngineClient(billingEngineClient)
-                    .financeInvoiceService(financeInvoiceService)
-                    .financeInvoiceBrazilService(financeInvoiceBrazilService)
+                    .coreInvoiceService(coreInvoiceService)
+                    .coreInvoiceBrazilService(coreInvoiceBrazilService)
                     .build();
         } else {
             return Debtor.builder()
                     .contractedBy(debtor.getContractedBy())
                     .debtorId(debtor.getDebtorId())
                     .billingEngineClient(billingEngineClient)
-                    .financeInvoiceService(financeInvoiceService)
+                    .coreInvoiceService(coreInvoiceService)
                     .build();
         }
     }

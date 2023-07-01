@@ -4,16 +4,16 @@ import refactoring.FinConstants;
 import refactoring.billingengine.SimpleInvoiceProjectionDTO;
 import refactoring.invoicelister.ui.ListInvoicesController;
 import refactoring.invoicelister.domain.Debtor;
-import refactoring.corebilling.FinanceInvoice;
-import refactoring.corebilling.FinanceInvoiceBrazil;
+import refactoring.corebilling.CoreInvoice;
+import refactoring.corebilling.CoreInvoiceBrazil;
 import refactoring.invoicelister.domain.InvoiceData;
 import org.junit.jupiter.api.Test;
 import refactoring.invoicelister.domain.DebtorRepository;
-import refactoring.corebilling.FinanceInvoiceBrazilRepository;
+import refactoring.corebilling.CoreInvoiceBrazilRepository;
 import refactoring.billingengine.BillingEngineClient;
 import refactoring.invoicelister.domain.DebtorFactory;
-import refactoring.corebilling.FinanceInvoiceBrazilService;
-import refactoring.corebilling.FinanceInvoiceService;
+import refactoring.corebilling.CoreInvoiceBrazilService;
+import refactoring.corebilling.CoreInvoiceService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -86,28 +86,28 @@ class InvoiceListerServiceTest {
         return billingEngineClient;
     }
 
-    private FinanceInvoiceService getFinanceInvoiceService() {
-        FinanceInvoiceService financeInvoiceService = mock(FinanceInvoiceService.class);
-        when(financeInvoiceService.getInvoicesForHotel(NON_BRAZIL_DEBTOR_ID)).thenReturn(getTestFinanceInvoices());
-        when(financeInvoiceService.getInvoicesForHotel(BRAZIL_DEBTOR_ID)).thenReturn(getTestFinanceBrazilInvoices());
-        return financeInvoiceService;
+    private CoreInvoiceService getCoreInvoiceService() {
+        CoreInvoiceService coreInvoiceService = mock(CoreInvoiceService.class);
+        when(coreInvoiceService.getInvoicesForHotel(NON_BRAZIL_DEBTOR_ID)).thenReturn(getTestCoreInvoices());
+        when(coreInvoiceService.getInvoicesForHotel(BRAZIL_DEBTOR_ID)).thenReturn(getTestCoreBrazilInvoices());
+        return coreInvoiceService;
     }
 
     private DebtorFactory getDebtorFactory() {
         DebtorRepository debtorRepository = mock(DebtorRepository.class);
         when(debtorRepository.getDebtorById(NON_BRAZIL_DEBTOR_ID)).thenReturn(getTestDebtor());
         when(debtorRepository.getDebtorById(BRAZIL_DEBTOR_ID)).thenReturn(getBrazilDebtor());
-        return new DebtorFactory(debtorRepository, getFinanceInvoiceBrazilService(), getFinanceInvoiceService(), getBillingEngineClient());
+        return new DebtorFactory(debtorRepository, getCoreInvoiceBrazilService(), getCoreInvoiceService(), getBillingEngineClient());
     }
 
-    private FinanceInvoiceBrazilService getFinanceInvoiceBrazilService() {
-        FinanceInvoiceBrazilRepository financeInvoiceBrazilRepository = mock(FinanceInvoiceBrazilRepository.class);
-        when(financeInvoiceBrazilRepository.getByInvoiceIds()).thenReturn(getFinanceInvoiceBrazilInvoices());
-        return new FinanceInvoiceBrazilService(financeInvoiceBrazilRepository);
+    private CoreInvoiceBrazilService getCoreInvoiceBrazilService() {
+        CoreInvoiceBrazilRepository coreInvoiceBrazilRepository = mock(CoreInvoiceBrazilRepository.class);
+        when(coreInvoiceBrazilRepository.getByInvoiceIds()).thenReturn(getCoreInvoiceBrazilInvoices());
+        return new CoreInvoiceBrazilService(coreInvoiceBrazilRepository);
     }
 
-    private List<FinanceInvoiceBrazil> getFinanceInvoiceBrazilInvoices() {
-        FinanceInvoiceBrazil brazil1 = FinanceInvoiceBrazil.builder()
+    private List<CoreInvoiceBrazil> getCoreInvoiceBrazilInvoices() {
+        CoreInvoiceBrazil brazil1 = CoreInvoiceBrazil.builder()
                 .invoiceId(20220203L)
                 .rpsNumber(8888L)
                 .prefeituraUrl("http://www.prefeitura.com/20220203")
@@ -135,8 +135,8 @@ class InvoiceListerServiceTest {
         return List.of(invoice1, invoice2);
     }
 
-    private List<FinanceInvoice> getTestFinanceInvoices() {
-        FinanceInvoice financeInvoice1 =  FinanceInvoice.builder()
+    private List<CoreInvoice> getTestCoreInvoices() {
+        CoreInvoice coreInvoice1 =  CoreInvoice.builder()
                 .invoiceId(20230103L)
                 .invoiceDate(LocalDate.of(2023, 1, 3))
                 .hotelId(111L)
@@ -145,7 +145,7 @@ class InvoiceListerServiceTest {
                 .type("reservation_statement")
                 .company(FinConstants.COMPANY_BOOKING_BV)
                 .build();
-        FinanceInvoice financeInvoice2 =  FinanceInvoice.builder()
+        CoreInvoice coreInvoice2 =  CoreInvoice.builder()
                 .invoiceId(20230203L)
                 .invoiceDate(LocalDate.of(2023, 2, 3))
                 .hotelId(111L)
@@ -154,7 +154,7 @@ class InvoiceListerServiceTest {
                 .type("reservation_statement")
                 .company(FinConstants.COMPANY_BOOKING_BV)
                 .build();
-        return List.of(financeInvoice1, financeInvoice2);
+        return List.of(coreInvoice1, coreInvoice2);
     }
 
     private Debtor getTestDebtor() {
@@ -258,8 +258,8 @@ class InvoiceListerServiceTest {
         return List.of(invoice1);
     }
 
-    private List<FinanceInvoice> getTestFinanceBrazilInvoices() {
-        FinanceInvoice financeInvoice1 =  FinanceInvoice.builder()
+    private List<CoreInvoice> getTestCoreBrazilInvoices() {
+        CoreInvoice coreInvoice1 =  CoreInvoice.builder()
                 .invoiceId(20220203L)
                 .invoiceDate(LocalDate.of(2022, 2, 3))
                 .hotelId(BRAZIL_DEBTOR_ID)
@@ -268,6 +268,6 @@ class InvoiceListerServiceTest {
                 .type("reservation_statement")
                 .company(FinConstants.COMPANY_BOOKING_LTDA)
                 .build();
-        return List.of(financeInvoice1);
+        return List.of(coreInvoice1);
     }
 }

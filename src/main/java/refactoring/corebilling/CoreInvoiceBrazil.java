@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class FinanceInvoiceBrazil {
+public class CoreInvoiceBrazil {
     private final Long rpsNumber;
     private final Long invoiceId;
     private final String prefeituraUrl;
