@@ -1,20 +1,14 @@
 package refactoring.invoicelister.domain;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import refactoring.FinConstants;
 import refactoring.billingengine.BillingEngineClient;
-import refactoring.corebilling.FinanceInvoiceBrazil;
-import refactoring.corebilling.FinanceInvoiceBrazilService;
-import refactoring.corebilling.FinanceInvoiceService;
+import refactoring.corebilling.CoreInvoiceService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -22,7 +16,7 @@ import java.util.stream.Collectors;
 public class Debtor {
     private final Long debtorId;
     private final String contractedBy;
-    private final FinanceInvoiceService financeInvoiceService;
+    private final CoreInvoiceService coreInvoiceService;
     private final BillingEngineClient billingEngineClient;
 
     public List<InvoiceData> getInvoices(Boolean includeCOO) {
@@ -38,7 +32,7 @@ public class Debtor {
     }
 
     protected List<InvoiceData> getCoreInvoices() {
-        return financeInvoiceService.getInvoicesForHotel(this.getDebtorId())
+        return coreInvoiceService.getInvoicesForHotel(this.getDebtorId())
                 .stream().map(InvoiceData::fromFinanceInvoice).toList();
     }
 

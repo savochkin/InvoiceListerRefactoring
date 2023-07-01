@@ -3,8 +3,8 @@ package refactoring.invoicelister.domain;
 import lombok.Builder;
 import lombok.Data;
 import refactoring.billingengine.SimpleInvoiceProjectionDTO;
-import refactoring.corebilling.FinanceInvoice;
-import refactoring.corebilling.FinanceInvoiceBrazil;
+import refactoring.corebilling.CoreInvoice;
+import refactoring.corebilling.CoreInvoiceBrazil;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,7 +27,7 @@ public class InvoiceData {
     // for brazil the download link should point to prefeituraUrl
     private final String prefeituraUrl;
 
-    public static InvoiceData fromFinanceInvoice(InvoiceData invoice, FinanceInvoiceBrazil brazil) {
+    public static InvoiceData fromFinanceInvoice(InvoiceData invoice, CoreInvoiceBrazil brazil) {
         return builder()
                 .assetId(invoice.getAssetId())
                 .displayId(invoice.getDisplayId())
@@ -57,7 +57,7 @@ public class InvoiceData {
                 .build();
     }
 
-    public static InvoiceData fromFinanceInvoice(FinanceInvoice invoice) {
+    public static InvoiceData fromFinanceInvoice(CoreInvoice invoice) {
         return builder()
                 .assetId(invoice.getHotelId())
                 .externalId(invoice.getInvoiceId().toString())
