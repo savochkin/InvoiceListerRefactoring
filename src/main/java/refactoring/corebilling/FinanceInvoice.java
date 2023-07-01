@@ -1,4 +1,4 @@
-package refactoring.domain.fin;
+package refactoring.corebilling;
 
 import lombok.Builder;
 import lombok.Data;

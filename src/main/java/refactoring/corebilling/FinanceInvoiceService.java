@@ -1,8 +1,7 @@
-package refactoring.service.repo.fin;
+package refactoring.corebilling;
 
-import refactoring.domain.fin.FinanceInvoice;
+import refactoring.corebilling.FinanceInvoice;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface FinanceInvoiceService {

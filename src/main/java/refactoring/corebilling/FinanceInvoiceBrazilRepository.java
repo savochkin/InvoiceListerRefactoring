@@ -1,6 +1,6 @@
-package refactoring.repository.fin;
+package refactoring.corebilling;
 
-import refactoring.domain.fin.FinanceInvoiceBrazil;
+import refactoring.corebilling.FinanceInvoiceBrazil;
 
 import java.util.List;
 

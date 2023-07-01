@@ -1,14 +1,11 @@
-package refactoring.service.invoices;
+package refactoring.invoicelister.domain;
 
 import lombok.AllArgsConstructor;
 import refactoring.FinConstants;
-import refactoring.domain.fin.Debtor;
-import refactoring.domain.fin.FinanceInvoiceBrazil;
-import refactoring.dto.InvoiceData;
-import refactoring.service.billingengine.BillingEngineClient;
-import refactoring.service.repo.fin.DebtorService;
-import refactoring.service.repo.fin.FinanceInvoiceBrazilService;
-import refactoring.service.repo.fin.FinanceInvoiceService;
+import refactoring.corebilling.FinanceInvoiceBrazil;
+import refactoring.billingengine.BillingEngineClient;
+import refactoring.corebilling.FinanceInvoiceBrazilService;
+import refactoring.corebilling.FinanceInvoiceService;
 
 import java.util.ArrayList;
 import java.util.List;

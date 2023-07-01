@@ -1,6 +1,4 @@
-package refactoring.service.billingengine;
-
-import refactoring.billing.models.SimpleInvoiceProjectionDTO;
+package refactoring.billingengine;
 
 import java.util.List;
 

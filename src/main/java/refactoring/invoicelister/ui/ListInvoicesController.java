@@ -1,8 +1,8 @@
-package refactoring.controller;
+package refactoring.invoicelister.ui;
 
 import lombok.AllArgsConstructor;
-import refactoring.dto.InvoiceData;
-import refactoring.service.invoices.InvoiceListerService;
+import refactoring.invoicelister.domain.InvoiceData;
+import refactoring.invoicelister.domain.InvoiceListerService;
 
 import java.util.List;
 

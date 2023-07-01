@@ -1,19 +1,20 @@
 package refactoring.service.invoices;
 
 import refactoring.FinConstants;
-import refactoring.billing.models.SimpleInvoiceProjectionDTO;
-import refactoring.controller.ListInvoicesController;
-import refactoring.domain.fin.Debtor;
-import refactoring.domain.fin.FinanceInvoice;
-import refactoring.domain.fin.FinanceInvoiceBrazil;
-import refactoring.dto.InvoiceData;
+import refactoring.billingengine.SimpleInvoiceProjectionDTO;
+import refactoring.invoicelister.domain.InvoiceListerService;
+import refactoring.invoicelister.ui.ListInvoicesController;
+import refactoring.invoicelister.domain.Debtor;
+import refactoring.corebilling.FinanceInvoice;
+import refactoring.corebilling.FinanceInvoiceBrazil;
+import refactoring.invoicelister.domain.InvoiceData;
 import org.junit.jupiter.api.Test;
-import refactoring.repository.fin.DebtorRepository;
-import refactoring.repository.fin.FinanceInvoiceBrazilRepository;
-import refactoring.service.billingengine.BillingEngineClient;
-import refactoring.service.repo.fin.DebtorService;
-import refactoring.service.repo.fin.FinanceInvoiceBrazilService;
-import refactoring.service.repo.fin.FinanceInvoiceService;
+import refactoring.invoicelister.domain.DebtorRepository;
+import refactoring.corebilling.FinanceInvoiceBrazilRepository;
+import refactoring.billingengine.BillingEngineClient;
+import refactoring.invoicelister.domain.DebtorService;
+import refactoring.corebilling.FinanceInvoiceBrazilService;
+import refactoring.corebilling.FinanceInvoiceService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
