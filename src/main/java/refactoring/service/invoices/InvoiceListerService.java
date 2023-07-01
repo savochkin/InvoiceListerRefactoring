@@ -70,16 +70,12 @@ public class InvoiceListerService {
     }
 
     private List<InvoiceData> getNbeInvoices(Debtor debtor) {
-        List<InvoiceData> invoices2 = billingEngineClient.getInvoices(debtor.getDebtorId())
+        List<InvoiceData> invoices = billingEngineClient.getInvoices(debtor.getDebtorId())
                 .stream().map(NbeInvoicesMapper::mapNbeInvoice).toList();
 
         int company = debtor.isContractedByBrazil()
                 ? FinConstants.COMPANY_BOOKING_LTDA : FinConstants.COMPANY_BOOKING_BV;
-        for(InvoiceData invoice1 : invoices2) {
-            // Code smell: "Repeated Switches"
-            invoice1.setCompany(company);
-        }
-        return invoices2;
+        return invoices.stream().map(i -> InvoiceData.fromFinanceInvoiceAndCompany(i, company)).toList();
     }
 
     private List<InvoiceData> getCoreInvoices(Debtor debtor) {
