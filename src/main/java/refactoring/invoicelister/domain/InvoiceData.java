@@ -42,21 +42,6 @@ public class InvoiceData {
                 .build();
     }
 
-    public static InvoiceData fromFinanceInvoiceAndCompany(InvoiceData invoice, int company) {
-        return builder()
-                .assetId(invoice.getAssetId())
-                .displayId(invoice.getDisplayId())
-                .externalId(invoice.getExternalId())
-                .invoiceType(invoice.getInvoiceType())
-                .commissionAmount(invoice.getCommissionAmount())
-                .invoiceDate(invoice.getInvoiceDate())
-                .company(company)
-                .rpsNumber(invoice.getRpsNumber())
-                .prefeituraUrl(invoice.getPrefeituraUrl())
-                .isAdyenAllowed(invoice.isAdyenAllowed())
-                .build();
-    }
-
     public static InvoiceData fromInvoiceDataAndAdyenAllowed(InvoiceData invoice, boolean adyenAllowed) {
         return builder()
                 .assetId(invoice.getAssetId())
@@ -83,7 +68,7 @@ public class InvoiceData {
                 .build();
     }
 
-    public static InvoiceData fromNbeInvoice(SimpleInvoiceProjectionDTO invoice) {
+    public static InvoiceData fromNbeInvoice(SimpleInvoiceProjectionDTO invoice, int company) {
         return builder()
                 .assetId(invoice.getAssetId())
                 .externalId(invoice.getExternalId())
@@ -92,6 +77,7 @@ public class InvoiceData {
                 .invoiceDate(invoice.getInvoiceDate())
                 .rpsNumber(invoice.getExtraInfo_rpsNumber())
                 .prefeituraUrl(invoice.getExtraInfo_prefeituraUrl())
+                .company(company)
                 .build();
     }
 }
