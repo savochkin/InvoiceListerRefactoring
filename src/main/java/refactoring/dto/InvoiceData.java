@@ -57,4 +57,19 @@ public class InvoiceData {
         result.setCompany(company);
         return result;
     }
+
+    public static InvoiceData fromInvoiceDataAndAdyenAllowed(InvoiceData invoice, boolean adyenAllowed) {
+        InvoiceData result = new InvoiceData();
+        result.setAssetId(invoice.getAssetId());
+        result.setDisplayId(invoice.getDisplayId());
+        result.setExternalId(invoice.getExternalId());
+        result.setInvoiceType(invoice.getInvoiceType());
+        result.setCommissionAmount(invoice.getCommissionAmount());
+        result.setInvoiceDate(invoice.getInvoiceDate());
+        result.setRpsNumber(invoice.getRpsNumber());
+        result.setPrefeituraUrl(invoice.getPrefeituraUrl());
+        result.setCompany(invoice.getCompany());
+        result.setAdyenAllowed(adyenAllowed);
+        return result;
+    }
 }

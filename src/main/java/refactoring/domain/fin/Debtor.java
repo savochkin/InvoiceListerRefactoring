@@ -11,6 +11,10 @@ public class Debtor {
     final private Long debtorId;
     final private String contractedBy;
 
+    public boolean isAdyenAllowed() {
+        return !isContractedByBrazil();
+    }
+
     public boolean isContractedByBrazil() {
         return FinConstants.CONTRACTED_BY_BRAZIL.equals(getContractedBy());
     }
