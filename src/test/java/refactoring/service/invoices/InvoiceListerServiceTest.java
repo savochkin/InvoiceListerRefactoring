@@ -1,5 +1,6 @@
 package refactoring.service.invoices;
 
+import refactoring.FinConstants;
 import refactoring.billing.models.SimpleInvoiceProjectionDTO;
 import refactoring.controller.ListInvoicesController;
 import refactoring.domain.fin.Debtor;
@@ -147,6 +148,7 @@ class InvoiceListerServiceTest {
                 .commission(BigDecimal.valueOf(231.03))
                 .paidState("paid")
                 .type("reservation_statement")
+                .company(FinConstants.COMPANY_BOOKING_BV)
                 .build();
         FinanceInvoice financeInvoice2 =  FinanceInvoice.builder()
                 .invoiceId(20230203L)
@@ -155,6 +157,7 @@ class InvoiceListerServiceTest {
                 .commission(BigDecimal.valueOf(232.03))
                 .paidState("unpaid")
                 .type("reservation_statement")
+                .company(FinConstants.COMPANY_BOOKING_BV)
                 .build();
         return List.of(financeInvoice1, financeInvoice2);
     }
@@ -181,6 +184,8 @@ class InvoiceListerServiceTest {
         invoiceData1.setCommissionAmount(BigDecimal.valueOf(231.03));
         invoiceData1.setInvoiceType("reservation_statement");
         invoiceData1.setInvoiceDate(LocalDate.of(2023, 1, 3));
+        invoiceData1.setCompany(FinConstants.COMPANY_BOOKING_BV);
+        invoiceData1.setAdyenAllowed(true);
         InvoiceData invoiceData2 = new InvoiceData();
         invoiceData2.setAssetId(111L);
         invoiceData2.setExternalId("20230203");
@@ -188,6 +193,8 @@ class InvoiceListerServiceTest {
         invoiceData2.setCommissionAmount(BigDecimal.valueOf(232.03));
         invoiceData2.setInvoiceType("reservation_statement");
         invoiceData2.setInvoiceDate(LocalDate.of(2023, 2, 3));
+        invoiceData2.setCompany(FinConstants.COMPANY_BOOKING_BV);
+        invoiceData2.setAdyenAllowed(true);
         InvoiceData invoiceData3 = new InvoiceData();
         invoiceData3.setAssetId(111L);
         invoiceData3.setExternalId("20230303");
@@ -195,6 +202,8 @@ class InvoiceListerServiceTest {
         invoiceData3.setCommissionAmount(BigDecimal.valueOf(233.03));
         invoiceData3.setInvoiceType("reservation_statement");
         invoiceData3.setInvoiceDate(LocalDate.of(2023, 3, 3));
+        invoiceData3.setCompany(FinConstants.COMPANY_BOOKING_BV);
+        invoiceData3.setAdyenAllowed(true);
         InvoiceData invoiceData4 = new InvoiceData();
         invoiceData4.setAssetId(111L);
         invoiceData4.setExternalId("20230403");
@@ -202,6 +211,8 @@ class InvoiceListerServiceTest {
         invoiceData4.setCommissionAmount(BigDecimal.valueOf(234.03));
         invoiceData4.setInvoiceType("reservation_statement");
         invoiceData4.setInvoiceDate(LocalDate.of(2023, 4, 3));
+        invoiceData4.setCompany(FinConstants.COMPANY_BOOKING_BV);
+        invoiceData4.setAdyenAllowed(true);
         /*
         InvoiceData invoiceData1 = InvoiceData.builder()
                 .assetId(111L)
@@ -249,6 +260,8 @@ class InvoiceListerServiceTest {
         invoiceData1.setInvoiceDate(LocalDate.of(2022, 1, 3));
         invoiceData1.setRpsNumber(9999L);
         invoiceData1.setPrefeituraUrl("http://www.prefeitura.com/20220103");
+        invoiceData1.setCompany(FinConstants.COMPANY_BOOKING_LTDA);
+        invoiceData1.setAdyenAllowed(false);
         InvoiceData invoiceData2 = new InvoiceData();
         invoiceData2.setAssetId(BRAZIL_DEBTOR_ID);
         invoiceData2.setExternalId("20220203");
@@ -258,6 +271,8 @@ class InvoiceListerServiceTest {
         invoiceData2.setInvoiceDate(LocalDate.of(2022, 2, 3));
         invoiceData2.setRpsNumber(8888L);
         invoiceData2.setPrefeituraUrl("http://www.prefeitura.com/20220203");
+        invoiceData2.setCompany(FinConstants.COMPANY_BOOKING_LTDA);
+        invoiceData2.setAdyenAllowed(false);
         /*
         InvoiceData invoiceData1 = InvoiceData.builder()
                 .assetId(BRAZIL_DEBTOR_ID)
@@ -304,6 +319,7 @@ class InvoiceListerServiceTest {
                 .commission(BigDecimal.valueOf(222.03))
                 .paidState("paid")
                 .type("reservation_statement")
+                .company(FinConstants.COMPANY_BOOKING_LTDA)
                 .build();
         return List.of(financeInvoice1);
     }
