@@ -2,6 +2,8 @@ package refactoring.service.invoices;
 
 import refactoring.FinConstants;
 import refactoring.billingengine.SimpleInvoiceProjectionDTO;
+import refactoring.invoicelister.ui.GetInvoiceListResponse;
+import refactoring.invoicelister.ui.InvoiceDto;
 import refactoring.invoicelister.ui.ListInvoicesController;
 import refactoring.invoicelister.domain.Debtor;
 import refactoring.corebilling.CoreInvoice;
@@ -41,37 +43,31 @@ class InvoiceListerServiceTest {
 
     @Test
     void getInvoicesFromNonBrazil() {
-        List<InvoiceData> invoices = getListInvoicesController().getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
-        assertNotNull(invoices);
-        assertEquals(getTestInvoices().size(), invoices.size());
-        for(int i=0; i<invoices.size(); i++) {
-            assertEquals(getTestInvoices().get(i), invoices.get(i));
+        GetInvoiceListResponse response = getListInvoicesController().getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
+        assertNotNull(response.getInvoices());
+        assertEquals(getTestInvoices().size(), response.getInvoices().size());
+        for(int i=0; i<response.getInvoices().size(); i++) {
+            assertEquals(getTestInvoices().get(i), response.getInvoices().get(i));
         }
     }
 
     @Test
     void getInvoicesFromBrazil() {
-        List<InvoiceData> invoices = getListInvoicesController().getInvoicesList(BRAZIL_DEBTOR_ID, false);
-        assertNotNull(invoices);
-        assertEquals(getTestBrazilInvoices().size(), invoices.size());
-        for(InvoiceData invoice: getTestBrazilInvoices()) {
-            assertTrue(invoices.stream().anyMatch(i -> i.equals(invoice)));
+        GetInvoiceListResponse response = getListInvoicesController().getInvoicesList(BRAZIL_DEBTOR_ID, false);
+        assertNotNull(response.getInvoices());
+        assertEquals(getTestBrazilInvoices().size(), response.getInvoices().size());
+        for(InvoiceDto invoice: getTestBrazilInvoices()) {
+            assertTrue(response.getInvoices().stream().anyMatch(i -> i.equals(invoice)));
         }
     }
 
     @Test
     void adyenAllowedInAllCountriesButBrazil() {
-        List<InvoiceData> invoices = getListInvoicesController().getInvoicesList(BRAZIL_DEBTOR_ID, false);
-        assertNotNull(invoices);
-        for(InvoiceData invoice: invoices) {
-            assertFalse(invoice.isAdyenAllowed());
-        }
+        GetInvoiceListResponse response = getListInvoicesController().getInvoicesList(BRAZIL_DEBTOR_ID, false);
+        assertFalse(response.isAdyenAllowed());
 
-        List<InvoiceData> invoices2 = getListInvoicesController().getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
-        assertNotNull(invoices2);
-        for(InvoiceData invoice: invoices2) {
-            assertTrue(invoice.isAdyenAllowed());
-        }
+        GetInvoiceListResponse response2 = getListInvoicesController().getInvoicesList(NON_BRAZIL_DEBTOR_ID, false);
+        assertTrue(response2.isAdyenAllowed());
     }
 
 
@@ -171,8 +167,8 @@ class InvoiceListerServiceTest {
                 .build();
     }
 
-    private List<InvoiceData> getTestInvoices() {
-        InvoiceData invoiceData1 = InvoiceData.builder()
+    private List<InvoiceDto> getTestInvoices() {
+        InvoiceDto invoiceData1 = InvoiceDto.builder()
                 .assetId(111L)
                 .externalId("20230103")
                 .invoiceType("invoice")
@@ -180,9 +176,8 @@ class InvoiceListerServiceTest {
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 1, 3))
                 .company(FinConstants.COMPANY_BOOKING_BV)
-                .isAdyenAllowed(true)
                 .build();
-        InvoiceData invoiceData2 = InvoiceData.builder()
+        InvoiceDto invoiceData2 = InvoiceDto.builder()
                 .assetId(111L)
                 .externalId("20230203")
                 .invoiceType("invoice")
@@ -190,9 +185,8 @@ class InvoiceListerServiceTest {
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 2, 3))
                 .company(FinConstants.COMPANY_BOOKING_BV)
-                .isAdyenAllowed(true)
                 .build();
-        InvoiceData invoiceData3 = InvoiceData.builder()
+        InvoiceDto invoiceData3 = InvoiceDto.builder()
                 .assetId(111L)
                 .externalId("20230303")
                 .invoiceType("invoice")
@@ -200,9 +194,8 @@ class InvoiceListerServiceTest {
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 3, 3))
                 .company(FinConstants.COMPANY_BOOKING_BV)
-                .isAdyenAllowed(true)
                 .build();
-        InvoiceData invoiceData4 = InvoiceData.builder()
+        InvoiceDto invoiceData4 = InvoiceDto.builder()
                 .assetId(111L)
                 .externalId("20230403")
                 .invoiceType("invoice")
@@ -210,14 +203,13 @@ class InvoiceListerServiceTest {
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 4, 3))
                 .company(FinConstants.COMPANY_BOOKING_BV)
-                .isAdyenAllowed(true)
                 .build();
 
         return List.of(invoiceData1, invoiceData2, invoiceData3, invoiceData4);
     }
 
-    private List<InvoiceData> getTestBrazilInvoices() {
-        InvoiceData invoiceData1 = InvoiceData.builder()
+    private List<InvoiceDto> getTestBrazilInvoices() {
+        InvoiceDto invoiceData1 = InvoiceDto.builder()
                 .assetId(BRAZIL_DEBTOR_ID)
                 .externalId("20220103")
                 .invoiceType("invoice")
@@ -227,9 +219,8 @@ class InvoiceListerServiceTest {
                 .rpsNumber(9999L)
                 .prefeituraUrl("http://www.prefeitura.com/20220103")
                 .company(FinConstants.COMPANY_BOOKING_LTDA)
-                .isAdyenAllowed(false)
                 .build();
-        InvoiceData invoiceData2 = InvoiceData.builder()
+        InvoiceDto invoiceData2 = InvoiceDto.builder()
                 .assetId(BRAZIL_DEBTOR_ID)
                 .externalId("20220203")
                 .invoiceType("invoice")
@@ -239,7 +230,6 @@ class InvoiceListerServiceTest {
                 .rpsNumber(8888L)
                 .prefeituraUrl("http://www.prefeitura.com/20220203")
                 .company(FinConstants.COMPANY_BOOKING_LTDA)
-                .isAdyenAllowed(false)
                 .build();
         return List.of(invoiceData1, invoiceData2);
     }

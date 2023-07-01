@@ -20,10 +20,7 @@ public class InvoiceData {
     private final BigDecimal commissionAmount;
     private final LocalDate invoiceDate;
     private final int company;
-    // indicator if this invoice is allowed to be payed online via Adyen
-    private final boolean isAdyenAllowed;
-    // Brazil specific field
-     private final Long rpsNumber;
+    private final Long rpsNumber;
     // for brazil the download link should point to prefeituraUrl
     private final String prefeituraUrl;
 
@@ -38,22 +35,6 @@ public class InvoiceData {
                 .company(invoice.company)
                 .rpsNumber(brazil == null? null : brazil.getRpsNumber())
                 .prefeituraUrl(brazil == null? null : brazil.getPrefeituraUrl())
-                .isAdyenAllowed(invoice.isAdyenAllowed())
-                .build();
-    }
-
-    public static InvoiceData fromInvoiceDataAndAdyenAllowed(InvoiceData invoice, boolean adyenAllowed) {
-        return builder()
-                .assetId(invoice.getAssetId())
-                .displayId(invoice.getDisplayId())
-                .externalId(invoice.getExternalId())
-                .invoiceType(invoice.getInvoiceType())
-                .commissionAmount(invoice.getCommissionAmount())
-                .invoiceDate(invoice.getInvoiceDate())
-                .company(invoice.getCompany())
-                .rpsNumber(invoice.getRpsNumber())
-                .prefeituraUrl(invoice.getPrefeituraUrl())
-                .isAdyenAllowed(adyenAllowed)
                 .build();
     }
 
