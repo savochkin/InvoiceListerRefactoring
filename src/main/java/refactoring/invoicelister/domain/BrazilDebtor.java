@@ -3,7 +3,6 @@ package refactoring.invoicelister.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
-import refactoring.FinConstants;
 import refactoring.corebilling.CoreInvoiceBrazil;
 import refactoring.corebilling.CoreInvoiceBrazilService;
 

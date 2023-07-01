@@ -1,4 +1,4 @@
-package refactoring;
+package refactoring.invoicelister.domain;
 
 public class FinConstants {
     public static final String CONTRACTED_BY_BRAZIL = "CONTRACTED_BY_BRAZIL";
