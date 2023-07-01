@@ -36,6 +36,7 @@ public class InvoiceData {
         result.setInvoiceType(invoice.getInvoiceType());
         result.setCommissionAmount(invoice.getCommissionAmount());
         result.setInvoiceDate(invoice.getInvoiceDate());
+        result.setCompany(invoice.company);
         if (brazil != null) {
             result.setRpsNumber(brazil.getRpsNumber());
             result.setPrefeituraUrl(brazil.getPrefeituraUrl());

@@ -119,7 +119,7 @@ public class InvoiceListerService {
 
     public List<InvoiceData> getBrazilInvoices(List<InvoiceData> invoices) {
         Map<Long, FinanceInvoiceBrazil> brazilInvoices = getBrazilInvoices();
-        return invoices.stream().map(i -> InvoiceData.fromFinanceInvoice(i, brazilInvoices.get(i.getExternalId()))).toList();
+        return invoices.stream().map(i -> InvoiceData.fromFinanceInvoice(i, brazilInvoices.get(Long.valueOf(i.getExternalId())))).toList();
     }
 
     private Map<Long, FinanceInvoiceBrazil> getBrazilInvoices() {
