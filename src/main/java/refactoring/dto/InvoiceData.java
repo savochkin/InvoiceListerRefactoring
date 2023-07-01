@@ -3,73 +3,96 @@ package refactoring.dto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import refactoring.billing.models.SimpleInvoiceProjectionDTO;
+import refactoring.domain.fin.FinanceInvoice;
 import refactoring.domain.fin.FinanceInvoiceBrazil;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
+@Builder
 public class InvoiceData {
-    private Long assetId;
+    private final Long assetId;
     // this is what we display on invoices pages as "Invoice Number": brazil? rpsNumber : externalId
-    private String displayId;
-    private String externalId;
-    private String invoiceType;
-    private BigDecimal commissionAmount;
-    private LocalDate invoiceDate;
-    private int company;
+    private final String displayId;
+    private final String externalId;
+    private final String invoiceType;
+    private final BigDecimal commissionAmount;
+    private final LocalDate invoiceDate;
+    private final int company;
     // indicator if this invoice is allowed to be payed online via Adyen
-    private boolean isAdyenAllowed;
+    private final boolean isAdyenAllowed;
     // Brazil specific field
-    // TODO: this property is not final, because we are setting it while enriching Core invoices
-    private Long rpsNumber;
+     private final Long rpsNumber;
     // for brazil the download link should point to prefeituraUrl
-    // TODO: this property is not final, because we are setting it while enriching Core invoices
-    private String prefeituraUrl;
+    private final String prefeituraUrl;
 
     public static InvoiceData fromFinanceInvoice(InvoiceData invoice, FinanceInvoiceBrazil brazil) {
-        InvoiceData result = new InvoiceData();
-        result.setAssetId(invoice.getAssetId());
-        result.setDisplayId(invoice.getDisplayId());
-        result.setExternalId(invoice.getExternalId());
-        result.setInvoiceType(invoice.getInvoiceType());
-        result.setCommissionAmount(invoice.getCommissionAmount());
-        result.setInvoiceDate(invoice.getInvoiceDate());
-        result.setCompany(invoice.company);
-        if (brazil != null) {
-            result.setRpsNumber(brazil.getRpsNumber());
-            result.setPrefeituraUrl(brazil.getPrefeituraUrl());
-        }
-        return result;
+        return builder()
+                .assetId(invoice.getAssetId())
+                .displayId(invoice.getDisplayId())
+                .externalId(invoice.getExternalId())
+                .invoiceType(invoice.getInvoiceType())
+                .commissionAmount(invoice.getCommissionAmount())
+                .invoiceDate(invoice.getInvoiceDate())
+                .company(invoice.company)
+                .rpsNumber(brazil == null? null : brazil.getRpsNumber())
+                .prefeituraUrl(brazil == null? null : brazil.getPrefeituraUrl())
+                .isAdyenAllowed(invoice.isAdyenAllowed())
+                .build();
     }
 
     public static InvoiceData fromFinanceInvoiceAndCompany(InvoiceData invoice, int company) {
-        InvoiceData result = new InvoiceData();
-        result.setAssetId(invoice.getAssetId());
-        result.setDisplayId(invoice.getDisplayId());
-        result.setExternalId(invoice.getExternalId());
-        result.setInvoiceType(invoice.getInvoiceType());
-        result.setCommissionAmount(invoice.getCommissionAmount());
-        result.setInvoiceDate(invoice.getInvoiceDate());
-        result.setRpsNumber(invoice.getRpsNumber());
-        result.setPrefeituraUrl(invoice.getPrefeituraUrl());
-        result.setCompany(company);
-        return result;
+        return builder()
+                .assetId(invoice.getAssetId())
+                .displayId(invoice.getDisplayId())
+                .externalId(invoice.getExternalId())
+                .invoiceType(invoice.getInvoiceType())
+                .commissionAmount(invoice.getCommissionAmount())
+                .invoiceDate(invoice.getInvoiceDate())
+                .company(company)
+                .rpsNumber(invoice.getRpsNumber())
+                .prefeituraUrl(invoice.getPrefeituraUrl())
+                .isAdyenAllowed(invoice.isAdyenAllowed())
+                .build();
     }
 
     public static InvoiceData fromInvoiceDataAndAdyenAllowed(InvoiceData invoice, boolean adyenAllowed) {
-        InvoiceData result = new InvoiceData();
-        result.setAssetId(invoice.getAssetId());
-        result.setDisplayId(invoice.getDisplayId());
-        result.setExternalId(invoice.getExternalId());
-        result.setInvoiceType(invoice.getInvoiceType());
-        result.setCommissionAmount(invoice.getCommissionAmount());
-        result.setInvoiceDate(invoice.getInvoiceDate());
-        result.setRpsNumber(invoice.getRpsNumber());
-        result.setPrefeituraUrl(invoice.getPrefeituraUrl());
-        result.setCompany(invoice.getCompany());
-        result.setAdyenAllowed(adyenAllowed);
-        return result;
+        return builder()
+                .assetId(invoice.getAssetId())
+                .displayId(invoice.getDisplayId())
+                .externalId(invoice.getExternalId())
+                .invoiceType(invoice.getInvoiceType())
+                .commissionAmount(invoice.getCommissionAmount())
+                .invoiceDate(invoice.getInvoiceDate())
+                .company(invoice.getCompany())
+                .rpsNumber(invoice.getRpsNumber())
+                .prefeituraUrl(invoice.getPrefeituraUrl())
+                .isAdyenAllowed(adyenAllowed)
+                .build();
+    }
+
+    public static InvoiceData fromFinanceInvoice(FinanceInvoice invoice) {
+        return builder()
+                .assetId(invoice.getHotelId())
+                .externalId(invoice.getInvoiceId().toString())
+                .invoiceType(invoice.getType())
+                .commissionAmount(invoice.getCommission())
+                .invoiceDate(invoice.getInvoiceDate())
+                .company(invoice.getCompany())
+                .build();
+    }
+
+    public static InvoiceData fromNbeInvoice(SimpleInvoiceProjectionDTO invoice) {
+        return builder()
+                .assetId(invoice.getAssetId())
+                .externalId(invoice.getExternalId())
+                .invoiceType(invoice.getInvoiceType())
+                .commissionAmount(invoice.getSettlementInvoiceAmount())
+                .invoiceDate(invoice.getInvoiceDate())
+                .rpsNumber(invoice.getExtraInfo_rpsNumber())
+                .prefeituraUrl(invoice.getExtraInfo_prefeituraUrl())
+                .build();
     }
 }

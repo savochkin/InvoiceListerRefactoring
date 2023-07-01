@@ -177,43 +177,6 @@ class InvoiceListerServiceTest {
     }
 
     private List<InvoiceData> getTestInvoices() {
-        InvoiceData invoiceData1 = new InvoiceData();
-        invoiceData1.setAssetId(111L);
-        invoiceData1.setExternalId("20230103");
-        invoiceData1.setInvoiceType("invoice");
-        invoiceData1.setCommissionAmount(BigDecimal.valueOf(231.03));
-        invoiceData1.setInvoiceType("reservation_statement");
-        invoiceData1.setInvoiceDate(LocalDate.of(2023, 1, 3));
-        invoiceData1.setCompany(FinConstants.COMPANY_BOOKING_BV);
-        invoiceData1.setAdyenAllowed(true);
-        InvoiceData invoiceData2 = new InvoiceData();
-        invoiceData2.setAssetId(111L);
-        invoiceData2.setExternalId("20230203");
-        invoiceData2.setInvoiceType("invoice");
-        invoiceData2.setCommissionAmount(BigDecimal.valueOf(232.03));
-        invoiceData2.setInvoiceType("reservation_statement");
-        invoiceData2.setInvoiceDate(LocalDate.of(2023, 2, 3));
-        invoiceData2.setCompany(FinConstants.COMPANY_BOOKING_BV);
-        invoiceData2.setAdyenAllowed(true);
-        InvoiceData invoiceData3 = new InvoiceData();
-        invoiceData3.setAssetId(111L);
-        invoiceData3.setExternalId("20230303");
-        invoiceData3.setInvoiceType("invoice");
-        invoiceData3.setCommissionAmount(BigDecimal.valueOf(233.03));
-        invoiceData3.setInvoiceType("reservation_statement");
-        invoiceData3.setInvoiceDate(LocalDate.of(2023, 3, 3));
-        invoiceData3.setCompany(FinConstants.COMPANY_BOOKING_BV);
-        invoiceData3.setAdyenAllowed(true);
-        InvoiceData invoiceData4 = new InvoiceData();
-        invoiceData4.setAssetId(111L);
-        invoiceData4.setExternalId("20230403");
-        invoiceData4.setInvoiceType("invoice");
-        invoiceData4.setCommissionAmount(BigDecimal.valueOf(234.03));
-        invoiceData4.setInvoiceType("reservation_statement");
-        invoiceData4.setInvoiceDate(LocalDate.of(2023, 4, 3));
-        invoiceData4.setCompany(FinConstants.COMPANY_BOOKING_BV);
-        invoiceData4.setAdyenAllowed(true);
-        /*
         InvoiceData invoiceData1 = InvoiceData.builder()
                 .assetId(111L)
                 .externalId("20230103")
@@ -221,6 +184,8 @@ class InvoiceListerServiceTest {
                 .commissionAmount(BigDecimal.valueOf(231.03))
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 1, 3))
+                .company(FinConstants.COMPANY_BOOKING_BV)
+                .isAdyenAllowed(true)
                 .build();
         InvoiceData invoiceData2 = InvoiceData.builder()
                 .assetId(111L)
@@ -229,6 +194,8 @@ class InvoiceListerServiceTest {
                 .commissionAmount(BigDecimal.valueOf(232.03))
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 2, 3))
+                .company(FinConstants.COMPANY_BOOKING_BV)
+                .isAdyenAllowed(true)
                 .build();
         InvoiceData invoiceData3 = InvoiceData.builder()
                 .assetId(111L)
@@ -237,6 +204,8 @@ class InvoiceListerServiceTest {
                 .commissionAmount(BigDecimal.valueOf(233.03))
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 3, 3))
+                .company(FinConstants.COMPANY_BOOKING_BV)
+                .isAdyenAllowed(true)
                 .build();
         InvoiceData invoiceData4 = InvoiceData.builder()
                 .assetId(111L)
@@ -245,35 +214,14 @@ class InvoiceListerServiceTest {
                 .commissionAmount(BigDecimal.valueOf(234.03))
                 .invoiceType("reservation_statement")
                 .invoiceDate(LocalDate.of(2023, 4, 3))
+                .company(FinConstants.COMPANY_BOOKING_BV)
+                .isAdyenAllowed(true)
                 .build();
-         */
+
         return List.of(invoiceData1, invoiceData2, invoiceData3, invoiceData4);
     }
 
     private List<InvoiceData> getTestBrazilInvoices() {
-        InvoiceData invoiceData1 = new InvoiceData();
-        invoiceData1.setAssetId(BRAZIL_DEBTOR_ID);
-        invoiceData1.setExternalId("20220103");
-        invoiceData1.setInvoiceType("invoice");
-        invoiceData1.setCommissionAmount(BigDecimal.valueOf(221.03));
-        invoiceData1.setInvoiceType("reservation_statement");
-        invoiceData1.setInvoiceDate(LocalDate.of(2022, 1, 3));
-        invoiceData1.setRpsNumber(9999L);
-        invoiceData1.setPrefeituraUrl("http://www.prefeitura.com/20220103");
-        invoiceData1.setCompany(FinConstants.COMPANY_BOOKING_LTDA);
-        invoiceData1.setAdyenAllowed(false);
-        InvoiceData invoiceData2 = new InvoiceData();
-        invoiceData2.setAssetId(BRAZIL_DEBTOR_ID);
-        invoiceData2.setExternalId("20220203");
-        invoiceData2.setInvoiceType("invoice");
-        invoiceData2.setCommissionAmount(BigDecimal.valueOf(222.03));
-        invoiceData2.setInvoiceType("reservation_statement");
-        invoiceData2.setInvoiceDate(LocalDate.of(2022, 2, 3));
-        invoiceData2.setRpsNumber(8888L);
-        invoiceData2.setPrefeituraUrl("http://www.prefeitura.com/20220203");
-        invoiceData2.setCompany(FinConstants.COMPANY_BOOKING_LTDA);
-        invoiceData2.setAdyenAllowed(false);
-        /*
         InvoiceData invoiceData1 = InvoiceData.builder()
                 .assetId(BRAZIL_DEBTOR_ID)
                 .externalId("20220103")
@@ -283,6 +231,8 @@ class InvoiceListerServiceTest {
                 .invoiceDate(LocalDate.of(2022, 1, 3))
                 .rpsNumber(9999L)
                 .prefeituraUrl("http://www.prefeitura.com/20220103")
+                .company(FinConstants.COMPANY_BOOKING_LTDA)
+                .isAdyenAllowed(false)
                 .build();
         InvoiceData invoiceData2 = InvoiceData.builder()
                 .assetId(BRAZIL_DEBTOR_ID)
@@ -293,7 +243,9 @@ class InvoiceListerServiceTest {
                 .invoiceDate(LocalDate.of(2022, 2, 3))
                 .rpsNumber(8888L)
                 .prefeituraUrl("http://www.prefeitura.com/20220203")
-                .build();*/
+                .company(FinConstants.COMPANY_BOOKING_LTDA)
+                .isAdyenAllowed(false)
+                .build();
         return List.of(invoiceData1, invoiceData2);
     }
 

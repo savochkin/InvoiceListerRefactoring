@@ -56,7 +56,7 @@ public class InvoiceListerService {
 
     private List<InvoiceData> getNbeInvoices(Debtor debtor) {
         List<InvoiceData> invoices = billingEngineClient.getInvoices(debtor.getDebtorId())
-                .stream().map(NbeInvoicesMapper::mapNbeInvoice).toList();
+                .stream().map(InvoiceData::fromNbeInvoice).toList();
 
         int company = debtor.isContractedByBrazil()
                 ? FinConstants.COMPANY_BOOKING_LTDA : FinConstants.COMPANY_BOOKING_BV;
@@ -65,7 +65,7 @@ public class InvoiceListerService {
 
     private List<InvoiceData> getCoreInvoices(Debtor debtor) {
         List<InvoiceData> invoices1 = financeInvoiceService.getInvoicesForHotel(debtor.getDebtorId())
-                .stream().map(CoreInvoicesMapper::mapCoreInvoice).toList();
+                .stream().map(InvoiceData::fromFinanceInvoice).toList();
 
         /*
         For core billing invoices we need to fetch Brazil related data
