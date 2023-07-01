@@ -43,4 +43,18 @@ public class InvoiceData {
         }
         return result;
     }
- }
+
+    public static InvoiceData fromFinanceInvoiceAndCompany(InvoiceData invoice, int company) {
+        InvoiceData result = new InvoiceData();
+        result.setAssetId(invoice.getAssetId());
+        result.setDisplayId(invoice.getDisplayId());
+        result.setExternalId(invoice.getExternalId());
+        result.setInvoiceType(invoice.getInvoiceType());
+        result.setCommissionAmount(invoice.getCommissionAmount());
+        result.setInvoiceDate(invoice.getInvoiceDate());
+        result.setRpsNumber(invoice.getRpsNumber());
+        result.setPrefeituraUrl(invoice.getPrefeituraUrl());
+        result.setCompany(company);
+        return result;
+    }
+}
