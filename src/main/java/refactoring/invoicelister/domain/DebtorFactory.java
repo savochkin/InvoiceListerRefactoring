@@ -26,6 +26,22 @@ public class DebtorFactory {
     private BillingEngineClient billingEngineClient;
 
     public Debtor getById(Long debtorId) {
-        return Debtor.fromDebtor(debtorRepository.getDebtorById(debtorId), billingEngineClient, financeInvoiceService, financeInvoiceBrazilService);
+        Debtor debtor = debtorRepository.getDebtorById(debtorId);
+        if (debtor.isContractedByBrazil()) {
+            return BrazilDebtor.builder()
+                    .contractedBy(debtor.getContractedBy())
+                    .debtorId(debtor.getDebtorId())
+                    .billingEngineClient(billingEngineClient)
+                    .financeInvoiceService(financeInvoiceService)
+                    .financeInvoiceBrazilService(financeInvoiceBrazilService)
+                    .build();
+        } else {
+            return Debtor.builder()
+                    .contractedBy(debtor.getContractedBy())
+                    .debtorId(debtor.getDebtorId())
+                    .billingEngineClient(billingEngineClient)
+                    .financeInvoiceService(financeInvoiceService)
+                    .build();
+        }
     }
 }
