@@ -1,4 +1,4 @@
-package refactoring.service.invoices;
+package refactoring.invoicelister.ui;
 
 import refactoring.invoicelister.domain.FinConstants;
 import refactoring.billingengine.SimpleInvoiceProjectionDTO;
