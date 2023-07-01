@@ -1,4 +1,4 @@
-package refactoring.billing.models;
+package refactoring.billingengine;
 
 import lombok.Builder;
 import lombok.Data;

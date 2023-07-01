@@ -1,8 +1,8 @@
-package refactoring.service.repo.fin;
+package refactoring.corebilling;
 
 import lombok.AllArgsConstructor;
-import refactoring.domain.fin.FinanceInvoiceBrazil;
-import refactoring.repository.fin.FinanceInvoiceBrazilRepository;
+import refactoring.corebilling.FinanceInvoiceBrazil;
+import refactoring.corebilling.FinanceInvoiceBrazilRepository;
 
 import java.util.List;
 

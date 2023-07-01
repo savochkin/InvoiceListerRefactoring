@@ -1,11 +1,10 @@
-package refactoring.dto;
+package refactoring.invoicelister.domain;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import refactoring.billing.models.SimpleInvoiceProjectionDTO;
-import refactoring.domain.fin.FinanceInvoice;
-import refactoring.domain.fin.FinanceInvoiceBrazil;
+import refactoring.billingengine.SimpleInvoiceProjectionDTO;
+import refactoring.corebilling.FinanceInvoice;
+import refactoring.corebilling.FinanceInvoiceBrazil;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

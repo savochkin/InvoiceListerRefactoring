@@ -1,8 +1,6 @@
-package refactoring.service.repo.fin;
+package refactoring.invoicelister.domain;
 
 import lombok.AllArgsConstructor;
-import refactoring.domain.fin.Debtor;
-import refactoring.repository.fin.DebtorRepository;
 
 /*
  * Real class is here: https://sourcegraph.booking.com/gitlab.booking.com/faas/finance-invoices/fintooling-services/-/blob/src/main/java/com/booking/faas/fintooling/service/repo/fin/DebtorService.java?L15:14&popover=pinned
