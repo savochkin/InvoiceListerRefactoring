@@ -1,6 +1,9 @@
 package refactoring.invoicelister.domain;
 
 import lombok.AllArgsConstructor;
+import refactoring.billingengine.BillingEngineClient;
+import refactoring.corebilling.FinanceInvoiceBrazilService;
+import refactoring.corebilling.FinanceInvoiceService;
 
 /*
  * Real class is here: https://sourcegraph.booking.com/gitlab.booking.com/faas/finance-invoices/fintooling-services/-/blob/src/main/java/com/booking/faas/fintooling/service/repo/fin/DebtorService.java?L15:14&popover=pinned
@@ -16,10 +19,13 @@ import lombok.AllArgsConstructor;
  * Better to separate UI layer, domain  layer and infrastructure layers.
  */
 @AllArgsConstructor
-public class DebtorService {
+public class DebtorFactory {
     private final DebtorRepository debtorRepository;
+    private FinanceInvoiceBrazilService financeInvoiceBrazilService;
+    private FinanceInvoiceService financeInvoiceService;
+    private BillingEngineClient billingEngineClient;
 
-    public Debtor getDebtorById(Long debtorId) {
-        return debtorRepository.getDebtorById(debtorId);
+    public Debtor getById(Long debtorId) {
+        return Debtor.fromDebtor(debtorRepository.getDebtorById(debtorId), billingEngineClient, financeInvoiceService, financeInvoiceBrazilService);
     }
 }

@@ -2,7 +2,6 @@ package refactoring.service.invoices;
 
 import refactoring.FinConstants;
 import refactoring.billingengine.SimpleInvoiceProjectionDTO;
-import refactoring.invoicelister.domain.InvoiceListerService;
 import refactoring.invoicelister.ui.ListInvoicesController;
 import refactoring.invoicelister.domain.Debtor;
 import refactoring.corebilling.FinanceInvoice;
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import refactoring.invoicelister.domain.DebtorRepository;
 import refactoring.corebilling.FinanceInvoiceBrazilRepository;
 import refactoring.billingengine.BillingEngineClient;
-import refactoring.invoicelister.domain.DebtorService;
+import refactoring.invoicelister.domain.DebtorFactory;
 import refactoring.corebilling.FinanceInvoiceBrazilService;
 import refactoring.corebilling.FinanceInvoiceService;
 
@@ -77,12 +76,7 @@ class InvoiceListerServiceTest {
 
 
     private ListInvoicesController getListInvoicesController() {
-        DebtorService debtorService = getDebtorService();
-        FinanceInvoiceBrazilService financeInvoiceBrazilService = getFinanceInvoiceBrazilService();
-        FinanceInvoiceService financeInvoiceService = getFinanceInvoiceService();
-        BillingEngineClient billingEngineClient = getBillingEngineClient();
-        InvoiceListerService invoiceListerService = new InvoiceListerService(debtorService, financeInvoiceService, billingEngineClient, financeInvoiceBrazilService);
-        return new ListInvoicesController(invoiceListerService);
+        return new ListInvoicesController(getDebtorFactory());
     }
 
     private BillingEngineClient getBillingEngineClient() {
@@ -99,11 +93,11 @@ class InvoiceListerServiceTest {
         return financeInvoiceService;
     }
 
-    private DebtorService getDebtorService() {
+    private DebtorFactory getDebtorFactory() {
         DebtorRepository debtorRepository = mock(DebtorRepository.class);
         when(debtorRepository.getDebtorById(NON_BRAZIL_DEBTOR_ID)).thenReturn(getTestDebtor());
         when(debtorRepository.getDebtorById(BRAZIL_DEBTOR_ID)).thenReturn(getBrazilDebtor());
-        return new DebtorService(debtorRepository);
+        return new DebtorFactory(debtorRepository, getFinanceInvoiceBrazilService(), getFinanceInvoiceService(), getBillingEngineClient());
     }
 
     private FinanceInvoiceBrazilService getFinanceInvoiceBrazilService() {
